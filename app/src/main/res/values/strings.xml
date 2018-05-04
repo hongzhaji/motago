@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">motago</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_1">扫码绑定</string>
+    <string name="menu_2">退出小智</string>
+    <string name="main_guid_text">您可以这样说：\n
+        我要听刘德华的歌\n
+        播放电台交通FM91.8\n
+        帮我把空调调到26度\n
+        深圳明天的天气\n
+        打开扫地机器人\n
+        10分钟后提醒我关火\n
+    </string>
+    <string name="xiaozhi_info">请使用阿里智能App扫码绑定</string>
+
+
+</resources>
