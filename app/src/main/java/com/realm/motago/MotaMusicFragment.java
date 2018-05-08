@@ -6,13 +6,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.realm.motago.manager.INavigationClick;
 
 /**
  * Created by Skyyao on 2018\5\4 0004.
  */
 
-public class MotaMusicFragment extends Fragment
+public class MotaMusicFragment extends Fragment implements INavigationClick
 {
+
+
+
 
     public MotaMusicFragment()
     {
@@ -23,6 +27,20 @@ public class MotaMusicFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.fragment_mota_music,container,false);
+
+        return v;
+    }
+
+    @Override
+    public boolean onNavigationCLick()
+    {
+
+        return true;
+    }
+
+    private void   initUI()
+    {
+
     }
 }

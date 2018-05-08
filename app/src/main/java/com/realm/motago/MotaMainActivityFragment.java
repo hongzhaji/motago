@@ -60,4 +60,9 @@ public class MotaMainActivityFragment extends Fragment
         Msg msg = new Msg("What are you doing", Msg.TYPE_RECEIVE);
         msgList.add(msg);
     }
+
+    public   void addMessage(String msg)
+    {
+        Msg msg1 = new Msg("hello sealong", Msg.TYPE_RECEIVE);
+    }
 }

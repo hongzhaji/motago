@@ -1,8 +1,10 @@
 package com.realm.motago;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,14 +17,14 @@ import com.realm.motago.manager.SupperFragmentManager;
 public class MotaMainActivity extends AppCompatActivity
 {
 
-private SupperFragmentManager manager;
+    private SupperFragmentManager manager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        ViewGroup v = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_mota_main,null);
+        ViewGroup v = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_mota_main, null);
         setContentView(v);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -35,19 +37,14 @@ private SupperFragmentManager manager;
             public void onClick(View v)
             {
 
-                 if(!manager.backToLastFragment())
+                if (!manager.backToLastFragment())
                 {
                     finish();
                 }
 
             }
         });
-        manager = new SupperFragmentManager(this,getSupportFragmentManager(),v);
-
-
-
-
-
+        manager = new SupperFragmentManager(this, getSupportFragmentManager(), v);
 
 
     }
@@ -73,12 +70,33 @@ private SupperFragmentManager manager;
         {
             manager.onXiaoZhiClick();
             return true;
-        }else if(id == R.id.menu_2)
+        } else if (id == R.id.menu_2)
         {
-            finish();
+            showExitXiaoZhiDialog();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showExitXiaoZhiDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("确认退出阿里小智？")
+                .setMessage("")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        finish();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
 

@@ -35,6 +35,7 @@ public class SupperFragmentManager implements IXiaoZhiClick
     private Button mVoiceInput;
     private Button getmVoiceCancel;
     private ViewGroup mBottomView;
+    private int mCurrentFragmentIndex ;
 
 
     public SupperFragmentManager(Context context, FragmentManager fragmentManager, ViewGroup v)
@@ -46,8 +47,8 @@ public class SupperFragmentManager implements IXiaoZhiClick
         initFragment();
         initEventCallback();
 
-        motaManager.beginTransaction().show( kindFragment[MOTA_FRAGMENT_MAIN]).commit();
-
+        motaManager.beginTransaction().show( kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
+        mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
 
         switchAliyunState(false);
     }
@@ -59,16 +60,18 @@ public class SupperFragmentManager implements IXiaoZhiClick
         FragmentTransaction transaction = motaManager.beginTransaction();
         transaction.hide(kindFragment[MOTA_FRAGMENT_MAIN]);
         transaction.show( kindFragment[MOTA_FRAGMENT_XIAOZHI]).commit();
+        mCurrentFragmentIndex = MOTA_FRAGMENT_XIAOZHI;
     }
 
 
     public boolean backToLastFragment()
     {
-        if (((MotaXiaoZhiFragment) kindFragment[MOTA_FRAGMENT_XIAOZHI]).onNavigationCLick())
+        if (mCurrentFragmentIndex == MOTA_FRAGMENT_XIAOZHI && ((MotaXiaoZhiFragment) kindFragment[MOTA_FRAGMENT_XIAOZHI]).onNavigationCLick())
         {
             FragmentTransaction transaction = motaManager.beginTransaction();
             transaction.hide(kindFragment[MOTA_FRAGMENT_XIAOZHI]);
             transaction.show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
+            mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
             return true;
         }
 
