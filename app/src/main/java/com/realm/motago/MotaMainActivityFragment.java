@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.realm.motago.adapter.MsgAdapter;
 import com.realm.motago.element.Msg;
+import com.realm.motago.manager.SupperFragmentManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MotaMainActivityFragment extends Fragment
+public class MotaMainActivityFragment extends Fragment implements SupperFragmentManager.IMesHelper
 {
 
     RecyclerView recyclerView;
@@ -61,8 +62,12 @@ public class MotaMainActivityFragment extends Fragment
         msgList.add(msg);
     }
 
-    public   void addMessage(String msg)
+    @Override
+    public   void addMessage(String msg,int type)
     {
-        Msg msg1 = new Msg("hello sealong", Msg.TYPE_RECEIVE);
+        Msg msg1 = new Msg(msg,type);
+        msgList.add(msg1);
     }
+
+
 }

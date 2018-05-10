@@ -99,5 +99,10 @@ public class MotaMainActivity extends AppCompatActivity
                 }).show();
     }
 
-
+    @Override
+    public void finish()
+    {
+        super.finish();
+        manager.finish();
+    }
 }

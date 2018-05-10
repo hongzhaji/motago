@@ -9,6 +9,8 @@ import com.aliyun.alink.pal.business.ALinkManager;
 import com.aliyun.alink.pal.business.DevInfo;
 import com.aliyun.alink.pal.business.LogUtils;
 import com.aliyun.alink.pal.business.PALConstant;
+import com.realm.motago.element.Msg;
+import com.realm.motago.manager.SupperFragmentManager;
 
 /**
  * Created by Skyyao on 2018\5\8 0008.
@@ -16,14 +18,22 @@ import com.aliyun.alink.pal.business.PALConstant;
 
 public class ALiYunServer
 {
+
+    private static final String TAG = "ALiYunServer";
+
     public static final String MODEL = "ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST";
 
+    private AliyunState mCurrentState = AliyunState.close;
 
     private Context mContext;
 
-    public ALiYunServer(Context context)
+    private SupperFragmentManager mainManager;
+
+
+    public ALiYunServer(Context context, SupperFragmentManager mainManager)
     {
         this.mContext = context;
+        this.mainManager = mainManager;
 
     }
 
@@ -48,19 +58,20 @@ public class ALiYunServer
             @Override
             public void onRecognizeResult(int status, String result)
             {
-                Log.d("guoguo", "status : " + status + "  result: " + result);
+                Log.d(TAG, "status : " + status + "  result: " + result);
+
             }
 
             @Override
             public void onAsrStreamingResult(int status, String result)
             {
-                Log.d("guoguo", "status : " + status + " onAsrStreamingResult :" + result);
+                Log.d(TAG, "status : " + status + " onAsrStreamingResult :" + result);
             }
 
             @Override
             public void onAlinkStatus(int status)
             {
-                Log.d("guoguo", "onAlinkStatus :" + status);
+                Log.d(TAG, "onAlinkStatus :" + status);
 
                 if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
                 {
@@ -75,6 +86,7 @@ public class ALiYunServer
 //                            mMsgText.setText("远场拾音 已启动");
 //                        }
 //                    }, 1000);
+                    mCurrentState = AliyunState.normal;
                 }
 
                 if (PALConstant.TYPE_PAL_STATUS_START_END == status)
@@ -85,13 +97,15 @@ public class ALiYunServer
 //                            mMsgText.setText("ALink 已启动");
 //                        }
 //                    });
+
+                    mCurrentState = AliyunState.close;
                 }
             }
 
             @Override
             public void onRecEvent(int status, int extra)
             {
-                Log.d("guoguo", "onRecEvent :" + status + " extra: " + extra);
+                Log.d(TAG, "onRecEvent :" + status + " extra: " + extra);
             }
 
             @Override
@@ -103,13 +117,15 @@ public class ALiYunServer
             @Override
             public void onMusicInfo(int resCode, String info)
             {
-                Log.d("guoguo", "onMusicInfo :" + resCode + " info: " + info);
+                Log.d(TAG, "onMusicInfo :" + resCode + " info: " + info);
             }
 
             @Override
             public void onALinkTTSInfo(String s)
             {
-                Log.d("guoguo", "onALinkTTSInfo :" + s);
+                Log.d(TAG, "onALinkTTSInfo :" + s);
+                mainManager.addMessage(s, Msg.TYPE_SEND);
+
             }
 
             @Override
@@ -120,9 +136,12 @@ public class ALiYunServer
         });
     }
 
+    public AliyunState getmCurrentState()
+    {
+        return mCurrentState;
+    }
 
-
-    private void  startALinkServer()
+    public void startALinkServer()
     {
         changeServer(SERVER_ONLINE);
 
@@ -139,28 +158,71 @@ public class ALiYunServer
         ALinkManager.getInstance().startALink(devInfo);
     }
 
-    private  void  stopALinkServer()
+    public void stopALinkServer()
     {
-        ALinkManager.getInstance().stopALink();
+        if (mCurrentState == AliyunState.normal)
+        {
+            ALinkManager.getInstance().stopALink();
+        }
+        if (mCurrentState == AliyunState.searching)
+        {
+            stopAlinkRec();
+            ALinkManager.getInstance().stopALink();
+        }
+
     }
 
-    private  void  startAlinkRec()
+    public void startAlinkRec()
     {
+        if (mCurrentState == AliyunState.close)
+        {
+            return;
+        }
+        if (mCurrentState == AliyunState.searching)
+        {
+            stopAlinkRec();
+        }
         ALinkManager.getInstance().startRec();
+        mCurrentState = AliyunState.searching;
+        Log.d(TAG, "startAlinkRec ");
     }
 
-    private  void  stopAlinkRec()
+    public void stopAlinkRec()
     {
-        ALinkManager.getInstance().stopRec();
+        if (mCurrentState == AliyunState.searching)
+        {
+            ALinkManager.getInstance().stopRec();
+            Log.d(TAG, "stopAlinkRec ");
+        }
+
 
     }
 
+    public void playMusic()
+    {
+        ALinkManager.getInstance().startMusic();
+    }
 
+    public void pauseMusic()
+    {
+        ALinkManager.getInstance().pauseMusic();
+    }
 
+    public void nextMusic()
+    {
+        ALinkManager.getInstance().nextMusic();
 
+    }
 
+    public void lastMusic()
+    {
+        ALinkManager.getInstance().preMusic();
+    }
 
-
+    public void switchPlaymode()
+    {
+        ALinkManager.getInstance().switchPlayMode();
+    }
 
     private boolean needRequestPermissions()
     {
@@ -179,6 +241,11 @@ public class ALiYunServer
         return false;
     }
 
+
+    public enum AliyunState
+    {
+        normal, searching, close
+    }
 
 }
 
