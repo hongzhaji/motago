@@ -52,7 +52,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         initFragment();
         initEventCallback();
 
-        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
+        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
         mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
 
         switchAliyunState(false);

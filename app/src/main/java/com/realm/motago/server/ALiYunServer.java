@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import com.alibaba.fastjson.JSON;
 import com.aliyun.alink.pal.business.ALinkManager;
 import com.aliyun.alink.pal.business.DevInfo;
 import com.aliyun.alink.pal.business.LogUtils;
 import com.aliyun.alink.pal.business.PALConstant;
+import com.realm.motago.element.AliyunResponseData;
 import com.realm.motago.element.Msg;
+import com.realm.motago.element.TestJson;
 import com.realm.motago.manager.SupperFragmentManager;
 
 /**
@@ -59,6 +62,29 @@ public class ALiYunServer
             public void onRecognizeResult(int status, String result)
             {
                 Log.d(TAG, "status : " + status + "  result: " + result);
+                // Recognize
+                if(status == 200)
+                {
+                    Log.d(TAG, "json start");
+                    try
+                    {
+                        AliyunResponseData data = JSON.parseObject(result,AliyunResponseData.class);
+
+                        if(data !=null)
+                        {
+                            Log.d(TAG, "parse value = "+data.toString());
+                        }
+                        else
+                        {
+                            Log.d(TAG, "parse value err");
+                        }
+                    }catch (Exception e)
+                    {
+                        Log.e(TAG,e.toString());
+                    }
+
+
+                }
 
             }
 
@@ -98,14 +124,19 @@ public class ALiYunServer
 //                        }
 //                    });
 
-                    mCurrentState = AliyunState.close;
+                    mCurrentState = AliyunState.normal;
                 }
             }
 
             @Override
             public void onRecEvent(int status, int extra)
             {
+                //if have words , extra big than zero
                 Log.d(TAG, "onRecEvent :" + status + " extra: " + extra);
+                if(status == PALConstant.TYPE_REC_NOTHING)
+                {
+                    Log.d(TAG, " not recognize" );
+                }
             }
 
             @Override
@@ -124,7 +155,7 @@ public class ALiYunServer
             public void onALinkTTSInfo(String s)
             {
                 Log.d(TAG, "onALinkTTSInfo :" + s);
-                mainManager.addMessage(s, Msg.TYPE_SEND);
+               // mainManager.addMessage(s, Msg.TYPE_SEND);
 
             }
 
@@ -156,6 +187,7 @@ public class ALiYunServer
         devInfo.alinkSecret = "aZcAxVPG1AdKyozHL3ZSQow2Pe2u1Xmm2Jctgot8";
         devInfo.manufacture = "ALINKTEST";
         ALinkManager.getInstance().startALink(devInfo);
+        Log.i("tyty","init aliyun server");
     }
 
     public void stopALinkServer()
@@ -174,6 +206,7 @@ public class ALiYunServer
 
     public void startAlinkRec()
     {
+        Log.d(TAG, "mCurrentState " +mCurrentState);
         if (mCurrentState == AliyunState.close)
         {
             return;

@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import com.alibaba.fastjson.JSON;
+import com.realm.motago.element.TestJson;
 import com.realm.motago.manager.SupperFragmentManager;
 
 public class MotaMainActivity extends AppCompatActivity
@@ -47,6 +49,10 @@ public class MotaMainActivity extends AppCompatActivity
         manager = new SupperFragmentManager(this, getSupportFragmentManager(), v);
 
 
+        //test json
+        String str = "{\"status_code\":\"1111\",\"biz_code\":\"aaa\",\"asr_ret\":\"ccccc\"}";
+        TestJson aaJson = JSON.parseObject(str, TestJson.class);
+        Log.i("tyty", aaJson.toString());
     }
 
     @Override
