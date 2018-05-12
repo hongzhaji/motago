@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.manager.INavigationClick;
 
 /**
@@ -17,6 +19,10 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
 {
 
     private IAliyunMusicHelp musicHelp;
+    private AliyunMusicInfo musicInfo;
+    private TextView musicAtist;
+    private TextView musicName;
+    private  Button playButton;
 
 
     public MotaMusicFragment()
@@ -46,10 +52,17 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
         this.musicHelp = musicHelp;
     }
 
+    public void setMusicInfo(AliyunMusicInfo musicInfo)
+    {
+        this.musicInfo = musicInfo;
+        invaluedateMusicInfo();
+        ;
+    }
+
     private void initUI(View v)
     {
-        Button playButtom = v.findViewById(R.id.music_play_play);
-        playButtom.setOnClickListener(new View.OnClickListener()
+         playButton = v.findViewById(R.id.music_play_play);
+        playButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -57,10 +70,12 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
                 if (musicHelp.isPlaying())
                 {
                     musicHelp.aliyunPauseMusic();
-                    ;
+                    playButton.setBackgroundResource(R.drawable.music_play_sel_pause);
+
                 } else
                 {
                     musicHelp.aliyunPlayMusic();
+                    playButton.setBackgroundResource(R.drawable.music_play_sel_play);
                 }
 
             }
@@ -103,6 +118,18 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             }
         });
 
+
+
+        musicAtist = v.findViewById(R.id.music_artis);
+        musicName = v.findViewById(R.id.music_name);
+
+    }
+
+    private void invaluedateMusicInfo()
+    {
+        musicAtist.setText(musicInfo.getArtist());
+        musicName.setText(musicInfo.getName());
+        playButton.setBackgroundResource(R.drawable.music_play_sel_play);
     }
 
     public interface IAliyunMusicHelp

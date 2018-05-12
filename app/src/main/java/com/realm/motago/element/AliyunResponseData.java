@@ -8,12 +8,12 @@ import java.util.List;
 
 public class AliyunResponseData
 {
-    private  int status_code;
-    private  int biz_code;
-    private int  finish;
+    private int status_code;
+    private int biz_code;
+    private int finish;
     private String asr_ret;
-    private  String uuid;
-    private  AliyunServiceData service_data;
+    private String uuid;
+    private AliyunServiceData service_data;
 
     public AliyunResponseData()
     {
@@ -106,98 +106,82 @@ public class AliyunResponseData
     {
 
 
-//       private List<AliyunTTsData> ttsUrl;
-//
-//        public AliyunServiceData()
-//        {
-//        }
-//
-//        public AliyunServiceData(List<AliyunTTsData> ttsUrl)
-//        {
-//            this.ttsUrl = ttsUrl;
-//        }
-//
-//        public List<AliyunTTsData> getTtsUrl()
-//        {
-//            return ttsUrl;
-//        }
-//
-//        public void setTtsUrl(List<AliyunTTsData> ttsUrl)
-//        {
-//            this.ttsUrl = ttsUrl;
-//        }
-//        public  void  addTtsUrl(AliyunTTsData ttsUrl)
-//        {
-//            this.ttsUrl.add(ttsUrl);
-//        }
-
+       private List<AliyunTTsData> ttsUrl;
 
         public AliyunServiceData()
         {
         }
 
-        public AliyunServiceData(String ttsUrl)
+        public AliyunServiceData(List<AliyunTTsData> ttsUrl)
         {
             this.ttsUrl = ttsUrl;
         }
 
-        private  String ttsUrl;
-
-        public String getTtsUrl()
+        public List<AliyunTTsData> getTtsUrl()
         {
             return ttsUrl;
         }
 
-        public void setTtsUrl(String ttsUrl)
+        public void setTtsUrl(List<AliyunTTsData> ttsUrl)
         {
             this.ttsUrl = ttsUrl;
         }
+
 
         @Override
         public String toString()
         {
             return "AliyunServiceData{" +
-                    "ttsUrl='" + ttsUrl + '\'' +
+                    "ttsUrl=" + ttsUrl +
                     '}';
         }
+
+        public class AliyunTTsData
+        {
+            private String tts_text;
+            private String tts_url;
+
+            public AliyunTTsData()
+            {
+            }
+
+            public AliyunTTsData(String tts_text, String tts_url)
+            {
+                this.tts_text = tts_text;
+                this.tts_url = tts_url;
+            }
+
+            public String getTts_text()
+            {
+                return tts_text;
+            }
+
+            public String getTts_url()
+            {
+                return tts_url;
+            }
+
+            public void setTts_text(String tts_text)
+            {
+                this.tts_text = tts_text;
+            }
+
+            public void setTts_url(String tts_url)
+            {
+                this.tts_url = tts_url;
+            }
+
+            @Override
+            public String toString()
+            {
+                return "AliyunTTsData{" +
+                        "tts_text='" + tts_text + '\'' +
+                        ", tts_url='" + tts_url + '\'' +
+                        '}';
+            }
+        }
     }
-    public  class  AliyunTTsData
-    {
-        private String tts_text;
-        private String tts_url;
 
-        public AliyunTTsData()
-        {
-        }
-
-        public AliyunTTsData(String tts_text, String tts_url)
-        {
-            this.tts_text = tts_text;
-            this.tts_url = tts_url;
-        }
-
-        public String gettts_text()
-        {
-            return tts_text;
-        }
-
-        public String gettts_url()
-        {
-            return tts_url;
-        }
-
-        public void settts_text(String tts_text)
-        {
-            this.tts_text = tts_text;
-        }
-
-        public void settts_url(String tts_url)
-        {
-            this.tts_url = tts_url;
-        }
-
-
-    }
 
 }
 

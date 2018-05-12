@@ -1,13 +1,17 @@
 package com.realm.motago;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.realm.motago.adapter.MsgAdapter;
 import com.realm.motago.element.Msg;
 import com.realm.motago.manager.SupperFragmentManager;
@@ -21,15 +25,36 @@ import java.util.List;
 public class MotaMainActivityFragment extends Fragment implements SupperFragmentManager.IMesHelper
 {
 
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+    private TextView mWarnInfoTextView;
     private MsgAdapter adapter;
+    private boolean mWarnInfohide ;
     List<Msg> msgList = new ArrayList<>();
+    private Handler mUiHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            super.handleMessage(msg);
+
+            if(!mWarnInfohide)
+            {
+                mWarnInfoTextView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+
+           // recyclerView.invalidate();
+            Log.i("tyty"," adapter invalueda");
+            adapter.notifyDataSetChanged();
+
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        initMsg();
+        // initMsg();
 
     }
 
@@ -49,6 +74,9 @@ public class MotaMainActivityFragment extends Fragment implements SupperFragment
         adapter = new MsgAdapter(msgList);
         recyclerView.setAdapter(adapter);
 
+        mWarnInfoTextView = viewGroup.findViewById(R.id.main_warn_info);
+        mWarnInfoTextView.setVisibility(View.VISIBLE);
+        mWarnInfohide = false;
         return viewGroup;
     }
 
@@ -63,10 +91,14 @@ public class MotaMainActivityFragment extends Fragment implements SupperFragment
     }
 
     @Override
-    public   void addMessage(String msg,int type)
+    public void addMessage(String msg, int type)
     {
-        Msg msg1 = new Msg(msg,type);
+
+        Msg msg1 = new Msg(msg, type);
+        Log.i("tyty","msg = "+msg+"  type = "+type);
         msgList.add(msg1);
+        mUiHandler.obtainMessage().sendToTarget();
+
     }
 
 

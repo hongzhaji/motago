@@ -1,6 +1,7 @@
 package com.realm.motago.manager;
 
 import android.content.Context;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,7 +13,10 @@ import com.realm.motago.MotaMainActivityFragment;
 import com.realm.motago.MotaMusicFragment;
 import com.realm.motago.MotaXiaoZhiFragment;
 import com.realm.motago.R;
+import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.server.ALiYunServer;
+
+import java.util.logging.Handler;
 
 /**
  * Created by Skyyao on 2018\5\4 0004.
@@ -41,6 +45,24 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     private IMesHelper mesHelper;
 
+    private android.os.Handler mUIHandler = new android.os.Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            super.handleMessage(msg);
+
+            if (msg.arg1 == MOTA_FRAGMENT_MUSIC)
+            {
+                ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicInfo((AliyunMusicInfo) msg.obj);
+                if (mCurrentFragmentIndex != MOTA_FRAGMENT_MUSIC)
+                {
+                    translateToMotagoMusicFragment();
+                }
+            }
+        }
+    };
+
 
     public SupperFragmentManager(Context context, FragmentManager fragmentManager, ViewGroup v)
     {
@@ -64,9 +86,18 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public void onXiaoZhiClick()
     {
         FragmentTransaction transaction = motaManager.beginTransaction();
-        transaction.hide(kindFragment[MOTA_FRAGMENT_MAIN]);
+        transaction.hide(kindFragment[mCurrentFragmentIndex]);
         transaction.show(kindFragment[MOTA_FRAGMENT_XIAOZHI]).commit();
         mCurrentFragmentIndex = MOTA_FRAGMENT_XIAOZHI;
+    }
+
+    public void setMusicInfo(AliyunMusicInfo musicInfo)
+    {
+        Message msg = mUIHandler.obtainMessage();
+        msg.arg1 = MOTA_FRAGMENT_MUSIC;
+        msg.obj = musicInfo;
+        msg.sendToTarget();
+
     }
 
 
@@ -103,9 +134,18 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         }
     }
 
-    public  void  finish()
+    public void finish()
     {
         mainServer.stopALinkServer();
+    }
+
+    private void translateToMotagoMusicFragment()
+    {
+        FragmentTransaction transaction = motaManager.beginTransaction();
+        transaction.hide(kindFragment[mCurrentFragmentIndex]);
+        transaction.show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
+        mCurrentFragmentIndex = MOTA_FRAGMENT_MUSIC;
+        switchAliyunState(false);
     }
 
     private void initFragment()
@@ -161,7 +201,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     @Override
     public void aliyunPauseMusic()
     {
-            mainServer.pauseMusic();
+        mainServer.pauseMusic();
     }
 
     @Override
@@ -191,7 +231,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     @Override
     public boolean isPlaying()
     {
-        return false;
+        return mainServer.isAliyunMusicMediaPlaying();
     }
 
 

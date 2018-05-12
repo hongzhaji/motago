@@ -6,14 +6,16 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import com.alibaba.fastjson.JSON;
-import com.aliyun.alink.pal.business.ALinkManager;
-import com.aliyun.alink.pal.business.DevInfo;
-import com.aliyun.alink.pal.business.LogUtils;
-import com.aliyun.alink.pal.business.PALConstant;
+import com.aliyun.alink.device.AlinkDevice;
+import com.aliyun.alink.pal.business.*;
+import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.AliyunResponseData;
 import com.realm.motago.element.Msg;
 import com.realm.motago.element.TestJson;
 import com.realm.motago.manager.SupperFragmentManager;
+
+import javax.crypto.spec.OAEPParameterSpec;
+import java.util.List;
 
 /**
  * Created by Skyyao on 2018\5\8 0008.
@@ -32,12 +34,27 @@ public class ALiYunServer
 
     private SupperFragmentManager mainManager;
 
+    private boolean isAliyunMusicMediaPlaying;
+
+
+    //music player state
+    //播放器准备就绪
+    public static final int TYPE_PAL_STATUS_MUSIC_PREPARE = 101;
+    //播放器播放完毕
+    public static final int TYPE_PAL_STATUS_MUSIC_COMPLETE = 102;
+    //播放器出错
+    public static final int TYPE_PAL_STATUS_MUSIC_ERROR = 103;
+    //上报音乐总时长
+    public static final int TYPE_PAL_STATUS_MUSIC_DURATION = 104;
+    //上报音乐当前播放时间
+    public static final int TYPE_PAL_STATUS_MUSIC_POSITION = 105;
+
 
     public ALiYunServer(Context context, SupperFragmentManager mainManager)
     {
         this.mContext = context;
         this.mainManager = mainManager;
-
+        isAliyunMusicMediaPlaying = false;
     }
 
     private static final int SERVER_ONLINE = 201;
@@ -63,24 +80,40 @@ public class ALiYunServer
             {
                 Log.d(TAG, "status : " + status + "  result: " + result);
                 // Recognize
-                if(status == 200)
+                if (status == 200)
                 {
                     Log.d(TAG, "json start");
                     try
                     {
-                        AliyunResponseData data = JSON.parseObject(result,AliyunResponseData.class);
+                        AliyunResponseData data = JSON.parseObject(result, AliyunResponseData.class);
 
-                        if(data !=null)
+                        if (data != null)
                         {
-                            Log.d(TAG, "parse value = "+data.toString());
-                        }
-                        else
+                            Log.d(TAG, "parse value = " + data.toString());
+
+                            // ask msg
+                            mainManager.addMessage(data.getAskRet(),Msg.TYPE_SEND);
+
+                            // receive msg
+                            List<AliyunResponseData.AliyunServiceData.AliyunTTsData > tTsData = data.getData().getTtsUrl();
+                            if(tTsData.size()>0)
+                            {
+                                String ttsText = tTsData.get(0).getTts_text();
+                                if( ttsText != null && !ttsText.trim().equals("null"))
+                                {
+                                    mainManager.addMessage(ttsText,Msg.TYPE_RECEIVE);
+                                }
+                            }
+
+
+
+                        } else
                         {
                             Log.d(TAG, "parse value err");
                         }
-                    }catch (Exception e)
+                    } catch (Exception e)
                     {
-                        Log.e(TAG,e.toString());
+                        Log.e(TAG, e.toString());
                     }
 
 
@@ -98,6 +131,7 @@ public class ALiYunServer
             public void onAlinkStatus(int status)
             {
                 Log.d(TAG, "onAlinkStatus :" + status);
+                
 
                 if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
                 {
@@ -133,29 +167,62 @@ public class ALiYunServer
             {
                 //if have words , extra big than zero
                 Log.d(TAG, "onRecEvent :" + status + " extra: " + extra);
-                if(status == PALConstant.TYPE_REC_NOTHING)
+                if (status == PALConstant.TYPE_REC_NOTHING)
                 {
-                    Log.d(TAG, " not recognize" );
+                    Log.d(TAG, " not recognize");
+                    mainManager.addMessage("声音太小，听不清楚",Msg.TYPE_RECEIVE);
+                    mainManager.switchAliyunState(false);
+                    stopAlinkRec();
                 }
             }
 
             @Override
             public void onMediaEvent(int status, int extra)
             {
-//				Log.d("guoguo","onMediaEvent :"  + status +" extra: "+extra);
+                //extra  = time
+                //state play = 105?
+				Log.d(TAG,"onMediaEvent :"  + status +" extra: "+extra);
+				if(status == TYPE_PAL_STATUS_MUSIC_DURATION)
+                {
+                    isAliyunMusicMediaPlaying = true;
+                }else if(status == TYPE_PAL_STATUS_MUSIC_ERROR || status == TYPE_PAL_STATUS_MUSIC_COMPLETE )
+                {
+                    isAliyunMusicMediaPlaying = false;
+                }
+
+
             }
 
             @Override
             public void onMusicInfo(int resCode, String info)
             {
                 Log.d(TAG, "onMusicInfo :" + resCode + " info: " + info);
+                if(resCode == 1000)
+                {
+                    try
+                    {
+                        AliyunMusicInfo musicInfo = JSON.parseObject(info,AliyunMusicInfo.class);
+                        if(musicInfo != null)
+                        {
+                            Log.i(TAG,musicInfo.toString());
+                            String musicName = musicInfo.getName();
+                            mainManager.addMessage("正在播放歌曲："+musicName,Msg.TYPE_RECEIVE);
+                            mainManager.setMusicInfo(musicInfo);
+                        }
+                    }catch (Exception e)
+                    {
+                        Log.e(TAG,e.toString());
+                    }
+
+                }
+
             }
 
             @Override
             public void onALinkTTSInfo(String s)
             {
                 Log.d(TAG, "onALinkTTSInfo :" + s);
-               // mainManager.addMessage(s, Msg.TYPE_SEND);
+                // mainManager.addMessage(s, Msg.TYPE_SEND);
 
             }
 
@@ -187,7 +254,7 @@ public class ALiYunServer
         devInfo.alinkSecret = "aZcAxVPG1AdKyozHL3ZSQow2Pe2u1Xmm2Jctgot8";
         devInfo.manufacture = "ALINKTEST";
         ALinkManager.getInstance().startALink(devInfo);
-        Log.i("tyty","init aliyun server");
+        Log.i("tyty", "init aliyun server");
     }
 
     public void stopALinkServer()
@@ -202,11 +269,12 @@ public class ALiYunServer
             ALinkManager.getInstance().stopALink();
         }
 
+
     }
 
     public void startAlinkRec()
     {
-        Log.d(TAG, "mCurrentState " +mCurrentState);
+        Log.d(TAG, "mCurrentState " + mCurrentState);
         if (mCurrentState == AliyunState.close)
         {
             return;
@@ -234,11 +302,13 @@ public class ALiYunServer
     public void playMusic()
     {
         ALinkManager.getInstance().startMusic();
+        isAliyunMusicMediaPlaying = true;
     }
 
     public void pauseMusic()
     {
         ALinkManager.getInstance().pauseMusic();
+        isAliyunMusicMediaPlaying = false;
     }
 
     public void nextMusic()
@@ -255,6 +325,12 @@ public class ALiYunServer
     public void switchPlaymode()
     {
         ALinkManager.getInstance().switchPlayMode();
+    }
+
+
+    public boolean isAliyunMusicMediaPlaying()
+    {
+        return isAliyunMusicMediaPlaying;
     }
 
     private boolean needRequestPermissions()
