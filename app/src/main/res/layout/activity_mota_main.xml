@@ -7,23 +7,7 @@
         android:layout_height="match_parent"
         tools:context="com.realm.motago.MotaMainActivity">
 
-    <android.support.design.widget.AppBarLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:navigationIcon="@mipmap/toolbar_back"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-
-
-        />
-
-    </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_mota_main"/>
 
@@ -67,4 +51,23 @@
             android:layout_gravity="bottom|center_horizontal"
     />
 
+
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="@mipmap/toolbar_back"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+
+
+            />
+
+    </android.support.design.widget.AppBarLayout>
 </android.support.design.widget.CoordinatorLayout>

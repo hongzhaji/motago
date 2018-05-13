@@ -83,13 +83,15 @@ public class ALiYunServer
                 if (status == 200)
                 {
                     Log.d(TAG, "json start");
+
+
                     try
                     {
                         AliyunResponseData data = JSON.parseObject(result, AliyunResponseData.class);
 
                         if (data != null)
                         {
-                            Log.d(TAG, "parse value = " + data.toString());
+                            Log.i(TAG, "parse value = " + data.toString());
 
                             // ask msg
                             mainManager.addMessage(data.getAskRet(),Msg.TYPE_SEND);
@@ -124,13 +126,13 @@ public class ALiYunServer
             @Override
             public void onAsrStreamingResult(int status, String result)
             {
-                Log.d(TAG, "status : " + status + " onAsrStreamingResult :" + result);
+                Log.i(TAG, "status : " + status + " onAsrStreamingResult :" + result);
             }
 
             @Override
             public void onAlinkStatus(int status)
             {
-                Log.d(TAG, "onAlinkStatus :" + status);
+                Log.i(TAG, "onAlinkStatus :" + status);
                 
 
                 if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
@@ -166,7 +168,7 @@ public class ALiYunServer
             public void onRecEvent(int status, int extra)
             {
                 //if have words , extra big than zero
-                Log.d(TAG, "onRecEvent :" + status + " extra: " + extra);
+                Log.i(TAG, "onRecEvent :" + status + " extra: " + extra);
                 if (status == PALConstant.TYPE_REC_NOTHING)
                 {
                     Log.d(TAG, " not recognize");
@@ -181,7 +183,7 @@ public class ALiYunServer
             {
                 //extra  = time
                 //state play = 105?
-				Log.d(TAG,"onMediaEvent :"  + status +" extra: "+extra);
+				Log.i(TAG,"onMediaEvent :"  + status +" extra: "+extra);
 				if(status == TYPE_PAL_STATUS_MUSIC_DURATION)
                 {
                     isAliyunMusicMediaPlaying = true;
@@ -196,7 +198,7 @@ public class ALiYunServer
             @Override
             public void onMusicInfo(int resCode, String info)
             {
-                Log.d(TAG, "onMusicInfo :" + resCode + " info: " + info);
+                Log.i(TAG, "onMusicInfo :" + resCode + " info: " + info);
                 if(resCode == 1000)
                 {
                     try
@@ -221,7 +223,7 @@ public class ALiYunServer
             @Override
             public void onALinkTTSInfo(String s)
             {
-                Log.d(TAG, "onALinkTTSInfo :" + s);
+                Log.i(TAG, "onALinkTTSInfo :" + s);
                 // mainManager.addMessage(s, Msg.TYPE_SEND);
 
             }

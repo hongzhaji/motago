@@ -2,6 +2,7 @@ package com.realm.motago;
 
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+
 import com.alibaba.fastjson.JSON;
 import com.realm.motago.element.TestJson;
 import com.realm.motago.manager.SupperFragmentManager;
@@ -27,9 +31,15 @@ public class MotaMainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         ViewGroup v = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_mota_main, null);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);// 隐藏标题
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(v);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
+
 
 
         setSupportActionBar(toolbar);

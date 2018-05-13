@@ -14,6 +14,7 @@ import com.realm.motago.MotaMusicFragment;
 import com.realm.motago.MotaXiaoZhiFragment;
 import com.realm.motago.R;
 import com.realm.motago.element.AliyunMusicInfo;
+import com.realm.motago.element.Msg;
 import com.realm.motago.server.ALiYunServer;
 
 import java.util.logging.Handler;
@@ -59,6 +60,10 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                 {
                     translateToMotagoMusicFragment();
                 }
+            }
+            if(msg.what == 1)
+            {
+                switchAliyunState(false);
             }
         }
     };
@@ -110,6 +115,19 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             transaction.show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
             mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
             return true;
+        }else if(mCurrentFragmentIndex == MOTA_FRAGMENT_MUSIC && ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).onNavigationCLick())
+        {
+            FragmentTransaction transaction = motaManager.beginTransaction();
+            transaction.hide(kindFragment[MOTA_FRAGMENT_MUSIC]);
+            transaction.show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
+            mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
+            if(mainServer.isAliyunMusicMediaPlaying())
+            {
+                mainServer.pauseMusic();
+            }
+            return true;
+
+
         }
 
 
@@ -119,6 +137,14 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public void addMessage(String msg, int type)
     {
         mesHelper.addMessage(msg, type);
+        //if receive ,may stop rec.
+        if(type == Msg.TYPE_RECEIVE)
+        {
+           Message message = mUIHandler.obtainMessage();
+            message.what = 1;
+            message.sendToTarget();
+
+        }
     }
 
     public void switchAliyunState(boolean recording)
