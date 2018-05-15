@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryRequest;
 import com.realm.motago.MotaMainActivityFragment;
 import com.realm.motago.MotaMusicFragment;
 import com.realm.motago.MotaXiaoZhiFragment;
@@ -55,6 +56,14 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
             if (msg.arg1 == MOTA_FRAGMENT_MUSIC)
             {
+                //set current time for music
+                if(msg.what == 2)
+                {
+                    int time = msg.arg1;
+                    ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicCurrentTime(""+(AliyunMusicInfo) msg.obj);
+                    return;
+                }
+                //set music info
                 ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicInfo((AliyunMusicInfo) msg.obj);
                 if (mCurrentFragmentIndex != MOTA_FRAGMENT_MUSIC)
                 {
@@ -103,6 +112,14 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         msg.obj = musicInfo;
         msg.sendToTarget();
 
+    }
+
+    public  void  setMusicCurrentTIme(int time)
+    {
+        Message msg = mUIHandler.obtainMessage();
+        msg.arg1 = time;
+        msg.what = 2;
+        msg.sendToTarget();
     }
 
 
@@ -258,6 +275,12 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public boolean isPlaying()
     {
         return mainServer.isAliyunMusicMediaPlaying();
+    }
+
+    @Override
+    public void aliyunLoveMusic(boolean love)
+    {
+            mainServer.loveMusic("");
     }
 
 

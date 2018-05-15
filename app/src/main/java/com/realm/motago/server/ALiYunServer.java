@@ -6,8 +6,12 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import com.alibaba.fastjson.JSON;
+import com.aliyun.alink.business.alink.ALinkBusinessEx;
 import com.aliyun.alink.device.AlinkDevice;
 import com.aliyun.alink.pal.business.*;
+import com.aliyun.alink.sdk.net.anet.api.AError;
+import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryRequest;
+import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryResponse;
 import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.AliyunResponseData;
 import com.realm.motago.element.Msg;
@@ -27,6 +31,8 @@ public class ALiYunServer
     private static final String TAG = "ALiYunServer";
 
     public static final String MODEL = "ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST";
+
+    private String mUUID = "EF6E1FECDBABBA2525DE5A93AED32173";
 
     private AliyunState mCurrentState = AliyunState.close;
 
@@ -94,19 +100,18 @@ public class ALiYunServer
                             Log.i(TAG, "parse value = " + data.toString());
 
                             // ask msg
-                            mainManager.addMessage(data.getAskRet(),Msg.TYPE_SEND);
+                            mainManager.addMessage(data.getAskRet(), Msg.TYPE_SEND);
 
                             // receive msg
-                            List<AliyunResponseData.AliyunServiceData.AliyunTTsData > tTsData = data.getData().getTtsUrl();
-                            if(tTsData.size()>0)
+                            List<AliyunResponseData.AliyunServiceData.AliyunTTsData> tTsData = data.getData().getTtsUrl();
+                            if (tTsData.size() > 0)
                             {
                                 String ttsText = tTsData.get(0).getTts_text();
-                                if( ttsText != null && !ttsText.trim().equals("null"))
+                                if (ttsText != null && !ttsText.trim().equals("null"))
                                 {
-                                    mainManager.addMessage(ttsText,Msg.TYPE_RECEIVE);
+                                    mainManager.addMessage(ttsText, Msg.TYPE_RECEIVE);
                                 }
                             }
-
 
 
                         } else
@@ -133,7 +138,7 @@ public class ALiYunServer
             public void onAlinkStatus(int status)
             {
                 Log.i(TAG, "onAlinkStatus :" + status);
-                
+
 
                 if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
                 {
@@ -172,7 +177,7 @@ public class ALiYunServer
                 if (status == PALConstant.TYPE_REC_NOTHING)
                 {
                     Log.d(TAG, " not recognize");
-                    mainManager.addMessage("声音太小，听不清楚",Msg.TYPE_RECEIVE);
+                    mainManager.addMessage("声音太小，听不清楚", Msg.TYPE_RECEIVE);
                     mainManager.switchAliyunState(false);
                     stopAlinkRec();
                 }
@@ -183,11 +188,14 @@ public class ALiYunServer
             {
                 //extra  = time
                 //state play = 105?
-				Log.i(TAG,"onMediaEvent :"  + status +" extra: "+extra);
-				if(status == TYPE_PAL_STATUS_MUSIC_DURATION)
+                Log.i(TAG, "onMediaEvent :" + status + " extra: " + extra);
+                if (status == TYPE_PAL_STATUS_MUSIC_DURATION)
+                {
+                    mainManager.setMusicCurrentTIme(extra);
+                } else if (status == TYPE_PAL_STATUS_MUSIC_DURATION)
                 {
                     isAliyunMusicMediaPlaying = true;
-                }else if(status == TYPE_PAL_STATUS_MUSIC_ERROR || status == TYPE_PAL_STATUS_MUSIC_COMPLETE )
+                } else if (status == TYPE_PAL_STATUS_MUSIC_ERROR || status == TYPE_PAL_STATUS_MUSIC_COMPLETE)
                 {
                     isAliyunMusicMediaPlaying = false;
                 }
@@ -199,21 +207,21 @@ public class ALiYunServer
             public void onMusicInfo(int resCode, String info)
             {
                 Log.i(TAG, "onMusicInfo :" + resCode + " info: " + info);
-                if(resCode == 1000)
+                if (resCode == 1000)
                 {
                     try
                     {
-                        AliyunMusicInfo musicInfo = JSON.parseObject(info,AliyunMusicInfo.class);
-                        if(musicInfo != null)
+                        AliyunMusicInfo musicInfo = JSON.parseObject(info, AliyunMusicInfo.class);
+                        if (musicInfo != null)
                         {
-                            Log.i(TAG,musicInfo.toString());
+                            Log.i(TAG, musicInfo.toString());
                             String musicName = musicInfo.getName();
-                            mainManager.addMessage("正在播放歌曲："+musicName,Msg.TYPE_RECEIVE);
+                            mainManager.addMessage("正在播放歌曲：" + musicName, Msg.TYPE_RECEIVE);
                             mainManager.setMusicInfo(musicInfo);
                         }
-                    }catch (Exception e)
+                    } catch (Exception e)
                     {
-                        Log.e(TAG,e.toString());
+                        Log.e(TAG, e.toString());
                     }
 
                 }
@@ -333,6 +341,70 @@ public class ALiYunServer
     public boolean isAliyunMusicMediaPlaying()
     {
         return isAliyunMusicMediaPlaying;
+    }
+
+
+    //music
+
+    public void loveMusic( String itemId)
+    {
+        TransitoryRequest transitoryRequest = new TransitoryRequest();
+        transitoryRequest.setMethod("mtop.openalink.pal.itemtofav.add");
+        transitoryRequest.needToken = false;
+        transitoryRequest.putParam("auid", "1");
+        transitoryRequest.putParam("uuid", mUUID);
+        transitoryRequest.putParam("itemId", itemId);
+
+        ALinkBusinessEx biz = new ALinkBusinessEx();
+        biz.request(transitoryRequest, new ALinkBusinessEx.IListener()
+        {
+            @Override
+            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse)
+            {
+                Log.i(TAG, "loveMusic onSuccess");
+                if (transitoryResponse != null && transitoryResponse.data != null)
+                {
+                    Log.i(TAG, "loveMusic " + transitoryResponse.data.toString());
+                }
+            }
+
+            @Override
+            public void onFailed(TransitoryRequest transitoryRequest, AError aError)
+            {
+                Log.i(TAG, "loveMusic onFailed");
+            }
+        });
+    }
+
+
+    public void getChannelDetailList(String uuid, String from, String size, String direct,
+                                      String channelId, String channelType, String collectionID) {
+        TransitoryRequest transitoryRequest = new TransitoryRequest();
+        transitoryRequest.setMethod("mtop.openalink.pal.channeldetaillist.get");
+        transitoryRequest.needToken = false;
+        transitoryRequest.putParam("uuid", uuid);
+        transitoryRequest.putParam("from", from);
+        transitoryRequest.putParam("size", size);
+        transitoryRequest.putParam("direct", direct);
+        transitoryRequest.putParam("channelId", channelId);
+        transitoryRequest.putParam("channelType", channelType);
+        transitoryRequest.putParam("collectionId", collectionID);
+
+        ALinkBusinessEx biz = new ALinkBusinessEx();
+        biz.request(transitoryRequest, new ALinkBusinessEx.IListener() {
+            @Override
+            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse) {
+                Log.i(TAG, "getChannelList onSuccess");
+                if (transitoryResponse != null && transitoryResponse.data != null) {
+                    Log.i(TAG, "getChannelList data: "+ transitoryResponse.data.toString());
+                }
+            }
+
+            @Override
+            public void onFailed(TransitoryRequest transitoryRequest, AError aError) {
+                Log.i(TAG, "getChannelList onFailed");
+            }
+        });
     }
 
     private boolean needRequestPermissions()

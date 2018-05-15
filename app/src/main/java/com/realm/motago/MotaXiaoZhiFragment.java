@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,14 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
             public void run()
             {
                 createQR();
+                if(qrBitmap !=null)
+                {
+                    Log.i("tyty","height = "+qrBitmap.getHeight()+"  width = "+qrBitmap.getWidth());
+                }
+                else
+                {
+                    Log.i("tyty","null for qr");
+            }
             }
         }).start();
 
@@ -54,8 +63,27 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
     {
         View v = inflater.inflate(R.layout.fragment_mota_xiaozhi, container, false);
         qrImageView = v.findViewById(R.id.qr_iv);
-        qrImageView.setImageBitmap(qrBitmap);
+
+
         return v;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden)
+    {
+        super.onHiddenChanged(hidden);
+        if(!hidden)
+        {
+            if(qrBitmap !=null)
+            {
+                Log.i("tyty","height = "+qrBitmap.getHeight()+"  width = "+qrBitmap.getWidth());
+            }
+            else
+            {
+                Log.i("tyty","null for qr");
+            }
+        }
+        qrImageView.setImageBitmap(qrBitmap);
     }
 
     @Override

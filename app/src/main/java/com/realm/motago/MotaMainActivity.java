@@ -24,6 +24,7 @@ public class MotaMainActivity extends AppCompatActivity
 {
 
     private SupperFragmentManager manager;
+    private  Toolbar toolbar;
 
 
     @Override
@@ -37,7 +38,7 @@ public class MotaMainActivity extends AppCompatActivity
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(v);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
 
 
@@ -53,6 +54,10 @@ public class MotaMainActivity extends AppCompatActivity
                 {
                     finish();
                 }
+                else
+                {
+                    toolbar.setTitle("");
+                }
 
             }
         });
@@ -60,9 +65,9 @@ public class MotaMainActivity extends AppCompatActivity
 
 
         //test json
-        String str = "{\"status_code\":\"1111\",\"biz_code\":\"aaa\",\"asr_ret\":\"ccccc\"}";
-        TestJson aaJson = JSON.parseObject(str, TestJson.class);
-        Log.i("tyty", aaJson.toString());
+//        String str = "{\"status_code\":\"1111\",\"biz_code\":\"aaa\",\"asr_ret\":\"ccccc\"}";
+//        TestJson aaJson = JSON.parseObject(str, TestJson.class);
+//        Log.i("tyty", aaJson.toString());
     }
 
     @Override
@@ -85,6 +90,7 @@ public class MotaMainActivity extends AppCompatActivity
         if (id == R.id.menu_1)
         {
             manager.onXiaoZhiClick();
+            toolbar.setTitle("我是阿里小智");
             return true;
         } else if (id == R.id.menu_2)
         {
