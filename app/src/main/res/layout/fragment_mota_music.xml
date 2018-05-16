@@ -16,6 +16,7 @@
             android:textColor="#ffffff"
             android:textSize="28px"
             android:gravity="center"
+        android:singleLine="true"
     />
     <TextView
             android:text="演员"
@@ -26,6 +27,7 @@
             android:textColor="#ffffff"
             android:textSize="18px"
             android:gravity="center"
+        android:singleLine="true"
     />
 
     <Button
@@ -41,7 +43,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
+        app:layout_constraintVertical_bias="0.498"
+
+        />
     <Button
             android:text="@null"
             android:layout_width="20dp"
@@ -77,12 +81,14 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintHorizontal_bias="0.21" android:layout_marginBottom="8dp"
             android:background="@drawable/music_play_sel_list"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp" app:layout_constraintVertical_bias="0.497"/>
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp" app:layout_constraintVertical_bias="0.497"
+
+        />
     <SeekBar
             android:layout_width="300dp"
             android:layout_height="wrap_content" android:id="@+id/music_seek" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/music_artis" android:layout_marginTop="28dp"
+            app:layout_constraintTop_toBottomOf="@+id/music_artis"
             android:max="100"
     />
     <TextView
@@ -90,7 +96,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/music_current_time" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toStartOf="@+id/music_seek" android:layout_marginEnd="8dp" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp" app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp" app:layout_constraintHorizontal_bias="0.722"
+            android:layout_marginTop="18dp" app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp" app:layout_constraintHorizontal_bias="0.722"
             app:layout_constraintVertical_bias="0.292"
             android:singleLine="true"
             android:textColor="#ffffff"
@@ -99,7 +105,7 @@
             android:text="00:00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/music_total_time" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="18dp"
             app:layout_constraintStart_toEndOf="@+id/music_seek" android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintHorizontal_bias="0.333" app:layout_constraintVertical_bias="0.292"
             android:singleLine="true"
@@ -109,10 +115,11 @@
             android:text="@null"
             android:layout_width="22dp"
             android:layout_height="19dp" android:id="@+id/music_loved_cb"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp" app:layout_constraintHorizontal_bias="0.017"
+            android:layout_marginStart="15dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="20dp" app:layout_constraintHorizontal_bias="0.017"
             app:layout_constraintVertical_bias="0.0" app:layout_constraintStart_toEndOf="@+id/music_name"
             android:background="@drawable/music_sel_loved"
+
 
     />
 

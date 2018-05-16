@@ -340,6 +340,7 @@ public class ALiYunServer
     public void switchPlaymode()
     {
         ALinkManager.getInstance().switchPlayMode();
+        Log.i(TAG,"switchPlaymode");
     }
 
 

@@ -3,7 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:layout_marginTop="180dp"
+              android:layout_marginTop="38dp"
+    android:layout_marginBottom="38dp"
 >
     <android.support.v4.view.ViewPager android:layout_width="match_parent" android:layout_height="match_parent"
                                        android:id="@+id/list_music_pageview"

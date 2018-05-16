@@ -31,8 +31,8 @@
             android:textColor="@android:color/white"
     />
     <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/list_view_item_music_loved"
+            android:layout_width="22dp"
+            android:layout_height="19dp" android:id="@+id/list_view_item_music_loved"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
             android:button="@null"

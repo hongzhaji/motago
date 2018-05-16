@@ -113,7 +113,7 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
         // APPLog.i(TAG, "val=" + val);
 
 
-        qrBitmap = create2DCode(val, 200);
+        qrBitmap = create2DCode(val, 140);
         // qr = Utils.addLogo(qr, BitmapFactory.decodeResource(getResources(), R.drawable.qrlogo));
     }
 
