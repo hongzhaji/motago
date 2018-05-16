@@ -41,6 +41,7 @@ public class ALiYunServer
     private SupperFragmentManager mainManager;
 
     private boolean isAliyunMusicMediaPlaying;
+    private  long musicTotalTime;
 
 
     //music player state
@@ -189,12 +190,16 @@ public class ALiYunServer
                 //extra  = time
                 //state play = 105?
                 Log.i(TAG, "onMediaEvent :" + status + " extra: " + extra);
-                if (status == TYPE_PAL_STATUS_MUSIC_DURATION)
+                if (status == 105)
                 {
-                    mainManager.setMusicCurrentTIme(extra);
+                    double per = extra*100/musicTotalTime;
+                    Log.i("tyty","per = "+per);
+                    mainManager.setMusicCurrentTIme(extra,(int)per);
                 } else if (status == TYPE_PAL_STATUS_MUSIC_DURATION)
                 {
                     isAliyunMusicMediaPlaying = true;
+                    musicTotalTime = extra;
+                    //here may set total long
                 } else if (status == TYPE_PAL_STATUS_MUSIC_ERROR || status == TYPE_PAL_STATUS_MUSIC_COMPLETE)
                 {
                     isAliyunMusicMediaPlaying = false;

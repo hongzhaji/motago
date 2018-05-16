@@ -8,4 +8,10 @@ public class MyMusicInfo
 {
     public String musicName;
     public String musicArtis;
+
+    public MyMusicInfo(String musicName, String musicArtis)
+    {
+        this.musicName = musicName;
+        this.musicArtis = musicArtis;
+    }
 }

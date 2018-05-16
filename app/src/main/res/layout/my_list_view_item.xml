@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+                android:gravity="center_vertical"
+>
+
+
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_view_item_music_name"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="20dp"
+
+    />
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_view_item_music_artis"
+            android:layout_alignLeft="@id/list_view_item_music_name"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:layout_marginLeft="130dp"
+            android:textColor="@android:color/white"
+    />
+    <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/list_view_item_music_loved"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:button="@null"
+            android:background="@drawable/music_sel_loved"
+            android:layout_marginRight="80dp"
+
+    />
+
+</RelativeLayout>

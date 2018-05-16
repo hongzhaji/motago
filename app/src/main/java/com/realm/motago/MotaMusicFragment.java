@@ -3,15 +3,18 @@ package com.realm.motago;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.TextView;
+import android.widget.*;
 import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.manager.INavigationClick;
+
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Skyyao on 2018\5\4 0004.
@@ -28,6 +31,7 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
     private CheckBox musicLoved;
     private TextView totalMusicTime;
     private TextView currentMusicTime;
+    private SeekBar musicSeekBar;
 
 
     public MotaMusicFragment()
@@ -64,9 +68,30 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
         ;
     }
 
-    public void setMusicCurrentTime(String time)
+    //long
+    public void setMusicCurrentTime(String time,int percent)
     {
-        currentMusicTime.setText(time);
+
+        if (time.equals("") || musicInfo.getDuration().equals(""))
+        {
+            Log.e("tyty", "time can't be null");
+            currentMusicTime.setText("");
+            return;
+        }
+        try
+        {
+            long curTime = new Long(time);
+            Date date = longToDate(curTime);
+            currentMusicTime.setText(dateToString(date,"mm:ss"));
+            musicSeekBar.setProgress(percent);
+            Log.i("tyty", "data = " + date.toString() + "  percent = " + percent);
+
+        } catch (ParseException e)
+        {
+
+        }
+
+
     }
 
 
@@ -135,6 +160,7 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
         totalMusicTime = v.findViewById(R.id.music_total_time);
         currentMusicTime = v.findViewById(R.id.music_current_time);
         musicLoved = v.findViewById(R.id.music_loved_cb);
+        musicSeekBar = v.findViewById(R.id.music_seek);
         musicLoved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
@@ -156,6 +182,39 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             musicLoved.setChecked(true);
         }
         totalMusicTime.setText(musicInfo.getDuration());
+    }
+
+
+    //mm:ss
+    private Date stringToDate(String strTime)
+
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
+        Date date = null;
+        try
+        {
+
+            date = formatter.parse(strTime);
+        } catch (ParseException e)
+        {
+            Log.e("tyty", e.toString());
+            date = null;
+        }
+        return date;
+    }
+
+    private Date longToDate(long currentTime)
+            throws ParseException
+    {
+        Date dateOld = new Date(currentTime); // 根据long类型的毫秒数生命一个date类型的时间
+        String sDateTime = dateToString(dateOld, "mm:ss"); // 把date类型的时间转换为string
+        Date date = stringToDate(sDateTime); // 把String类型转换为Date类型
+        return date;
+    }
+
+    private String dateToString(Date data, String formatType)
+    {
+        return new SimpleDateFormat(formatType).format(data);
     }
 
     public interface IAliyunMusicHelp

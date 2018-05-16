@@ -10,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryRequest;
-import com.realm.motago.MotaMainActivityFragment;
-import com.realm.motago.MotaMusicFragment;
-import com.realm.motago.MotaXiaoZhiFragment;
-import com.realm.motago.R;
+import com.realm.motago.*;
 import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.Msg;
 import com.realm.motago.server.ALiYunServer;
@@ -29,6 +26,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public static final int MOTA_FRAGMENT_MAIN = 0;
     public static final int MOTA_FRAGMENT_MUSIC = 1;
     public static final int MOTA_FRAGMENT_XIAOZHI = 2;
+    public static final int MOTA_FRAGMENT_LIST = 3;
+
 
 
     private Context mContext;
@@ -59,8 +58,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                 //set current time for music
                 if(msg.what == 2)
                 {
-                    int time = msg.arg1;
-                    ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicCurrentTime(""+(AliyunMusicInfo) msg.obj);
+                    int time = msg.arg2;
+                    ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicCurrentTime(""+time,(int)msg.obj);
                     return;
                 }
                 //set music info
@@ -88,7 +87,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         initFragment();
         initEventCallback();
 
-        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
+        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_LIST]).commit();
         mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
 
         switchAliyunState(false);
@@ -114,11 +113,13 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     }
 
-    public  void  setMusicCurrentTIme(int time)
+    public  void  setMusicCurrentTIme(int time,int percent)
     {
         Message msg = mUIHandler.obtainMessage();
-        msg.arg1 = time;
+        msg.arg1 = MOTA_FRAGMENT_MUSIC;
+        msg.arg2 = time;
         msg.what = 2;
+        msg.obj = percent;
         msg.sendToTarget();
     }
 
@@ -193,7 +194,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     private void initFragment()
     {
-        kindFragment = new Fragment[3];
+        kindFragment = new Fragment[4];
         MotaMainActivityFragment mainFragment = new MotaMainActivityFragment();
         kindFragment[MOTA_FRAGMENT_MAIN] = mainFragment;
         mesHelper = mainFragment;
@@ -202,6 +203,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         kindFragment[MOTA_FRAGMENT_MUSIC] = musicFragment;
         MotaXiaoZhiFragment xiaoZhiFragment = new MotaXiaoZhiFragment();
         kindFragment[MOTA_FRAGMENT_XIAOZHI] = xiaoZhiFragment;
+        MotaPlayListFragment listFragment = new MotaPlayListFragment();
+        kindFragment[MOTA_FRAGMENT_LIST] = listFragment;
         for (Fragment fragment :
                 kindFragment)
         {

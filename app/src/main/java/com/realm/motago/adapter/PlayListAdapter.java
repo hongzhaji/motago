@@ -1,11 +1,14 @@
 package com.realm.motago.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import com.realm.motago.element.MyMusicInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,14 +22,25 @@ public class PlayListAdapter extends PagerAdapter
 
     public PlayListAdapter(Context context)
     {
+        mViews = new ArrayList<ListView>();
+
+        List<MyMusicInfo> infos = new ArrayList<MyMusicInfo>();
+        infos.add(new MyMusicInfo("aa","bb"));
+        infos.add(new MyMusicInfo("aa","bb"));
+        infos.add(new MyMusicInfo("aa","bb"));
+
         ListView mPlayListView = new ListView(context);
         mPlayListView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mPlayListView.setAdapter(new MyListViewAdapter(infos,context));
         ListView mPlayLovedView = new ListView(context);
         mPlayLovedView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mPlayLovedView.setAdapter(new MyListViewAdapter(infos,context));
         mViews.add(mPlayListView);
         mViews.add(mPlayLovedView);
 
         //set adepter
+
+
 
     }
 
@@ -46,8 +60,7 @@ public class PlayListAdapter extends PagerAdapter
     public Object instantiateItem(ViewGroup container, int position)
     {
         container.addView(mViews.get(position));
-
-        return container;
+        return mViews.get(position);
     }
 
     @Override
