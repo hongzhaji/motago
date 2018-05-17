@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryRequest;
+
 import com.realm.motago.*;
 import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.Msg;
@@ -87,7 +87,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         initFragment();
         initEventCallback();
 
-        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
+        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
         mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
 
         switchAliyunState(false);
@@ -265,12 +265,17 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     @Override
     public void aliyunSetPlayMode(int mode)
     {
-        mainServer.switchPlaymode();
+        mainServer.getChannelList();
     }
 
     @Override
     public void showPlayList()
     {
+            mainServer.accountLogin();
+       // Error:Error converting bytecode to dex:
+    //Cause: com.android.dex.DexException: Multiple dex files define Lcom/alibaba/mtl/appmonitor/AppMonitorDelegate$Stat;
+
+
 
     }
 

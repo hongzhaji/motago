@@ -44,14 +44,13 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
             public void run()
             {
                 createQR();
-                if(qrBitmap !=null)
+                if (qrBitmap != null)
                 {
-                    Log.i("tyty","height = "+qrBitmap.getHeight()+"  width = "+qrBitmap.getWidth());
+                    Log.i("tyty", "height = " + qrBitmap.getHeight() + "  width = " + qrBitmap.getWidth());
+                } else
+                {
+                    Log.i("tyty", "null for qr");
                 }
-                else
-                {
-                    Log.i("tyty","null for qr");
-            }
             }
         }).start();
 
@@ -72,15 +71,14 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
     public void onHiddenChanged(boolean hidden)
     {
         super.onHiddenChanged(hidden);
-        if(!hidden)
+        if (!hidden)
         {
-            if(qrBitmap !=null)
+            if (qrBitmap != null)
             {
-                Log.i("tyty","height = "+qrBitmap.getHeight()+"  width = "+qrBitmap.getWidth());
-            }
-            else
+                Log.i("tyty", "height = " + qrBitmap.getHeight() + "  width = " + qrBitmap.getWidth());
+            } else
             {
-                Log.i("tyty","null for qr");
+                Log.i("tyty", "null for qr");
             }
         }
         qrImageView.setImageBitmap(qrBitmap);
@@ -100,8 +98,8 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
 
             // http://smart.aliyun.com/download.htm?ver=2.0&model=ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST&mac=11:12:F2:F9:F9:F8&sn=11:12:F2:F9:F9:F8
             val = "http://smart.aliyun.com/download.htm?ver=2.0&model=" + "ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST"
-                    + "&mac=11:12:F2:F9:F9:F8"
-                    + "&sn=11:12:F2:F9:F9:F8";
+                    + "&mac=" + HelpUtil.getMacAddress()
+                    + "&sn=" + HelpUtil.getAndroidOsSN();
 
         } catch (Exception e)
         {

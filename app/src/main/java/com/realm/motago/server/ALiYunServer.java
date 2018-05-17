@@ -3,22 +3,39 @@ package com.realm.motago.server;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.aliyun.alink.business.account.OALoginBusiness;
+import com.aliyun.alink.business.alink.ALinkBusiness;
 import com.aliyun.alink.business.alink.ALinkBusinessEx;
+import com.aliyun.alink.business.alink.ALinkRequest;
+import com.aliyun.alink.business.downstream.DeviceBusiness;
+import com.aliyun.alink.business.login.AlinkLoginBusiness;
+
 import com.aliyun.alink.device.AlinkDevice;
+import com.aliyun.alink.device.alink.DeviceLinkBusiness;
+import com.aliyun.alink.device.alink.DeviceLinkRequest;
+import com.aliyun.alink.device.alink.DeviceLinkResponse;
 import com.aliyun.alink.pal.business.*;
 import com.aliyun.alink.sdk.net.anet.api.AError;
+import com.aliyun.alink.sdk.net.anet.api.persistentnet.IOnPushListener;
 import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryRequest;
 import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryResponse;
-import com.realm.motago.element.AliyunMusicInfo;
-import com.realm.motago.element.AliyunResponseData;
-import com.realm.motago.element.Msg;
-import com.realm.motago.element.TestJson;
+import com.realm.motago.HelpUtil;
+import com.realm.motago.element.*;
 import com.realm.motago.manager.SupperFragmentManager;
+import com.wsf.squareup.okhttp.internal.http.HttpEngine;
 
 import javax.crypto.spec.OAEPParameterSpec;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -30,7 +47,7 @@ public class ALiYunServer
 
     private static final String TAG = "ALiYunServer";
 
-    public static final String MODEL = "ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST";
+    public static final String MODEL = "HUIJU_ENTERTAINMENT_ATALK_E3";
 
     private String mUUID = "EF6E1FECDBABBA2525DE5A93AED32173";
 
@@ -41,7 +58,7 @@ public class ALiYunServer
     private SupperFragmentManager mainManager;
 
     private boolean isAliyunMusicMediaPlaying;
-    private  long musicTotalTime;
+    private long musicTotalTime;
 
 
     //music player state
@@ -62,6 +79,7 @@ public class ALiYunServer
         this.mContext = context;
         this.mainManager = mainManager;
         isAliyunMusicMediaPlaying = false;
+        initPushTunnel();
     }
 
     private static final int SERVER_ONLINE = 201;
@@ -190,11 +208,11 @@ public class ALiYunServer
                 //extra  = time
                 //state play = 105?
                 Log.i(TAG, "onMediaEvent :" + status + " extra: " + extra);
-                if (status == 105)
+                if (status == TYPE_PAL_STATUS_MUSIC_POSITION)
                 {
-                    double per = extra*100/musicTotalTime;
-                    Log.i("tyty","per = "+per);
-                    mainManager.setMusicCurrentTIme(extra,(int)per);
+                    double per = extra * 100 / musicTotalTime;
+                    Log.i("tyty", "per = " + per);
+                    mainManager.setMusicCurrentTIme(extra, (int) per);
                 } else if (status == TYPE_PAL_STATUS_MUSIC_DURATION)
                 {
                     isAliyunMusicMediaPlaying = true;
@@ -258,6 +276,7 @@ public class ALiYunServer
     {
         changeServer(SERVER_ONLINE);
 
+        /* test
         DevInfo devInfo = new DevInfo();
         devInfo.devName = "ALINKTEST";
         devInfo.category = "ENTERTAINMENT";
@@ -270,6 +289,22 @@ public class ALiYunServer
         devInfo.manufacture = "ALINKTEST";
         ALinkManager.getInstance().startALink(devInfo);
         Log.i("tyty", "init aliyun server");
+        */
+        DevInfo devInfo = new DevInfo();
+        devInfo.devName = "E3";
+        devInfo.category = "ENTERTAINMENT";
+        devInfo.devType = "ATALK";
+        devInfo.model = MODEL;
+        devInfo.sn = HelpUtil.getAndroidOsSN();
+        devInfo.mac = HelpUtil.getMacAddress();
+        devInfo.alinkKey = "xNPBDj1BtYtuD5zRZhFe";
+        devInfo.alinkSecret = "mQcwLXFnfCZyvBV3hXLCskwtujLZW6KqwCtDXB7X";
+        devInfo.manufacture = "HUIJU";
+        ALinkManager.getInstance().startALink(devInfo);
+
+        Log.i(TAG, HelpUtil.getAndroidOsSN()+" ---------"+ HelpUtil.getMacAddress()+"  ----");
+
+
     }
 
     public void stopALinkServer()
@@ -340,7 +375,7 @@ public class ALiYunServer
     public void switchPlaymode()
     {
         ALinkManager.getInstance().switchPlayMode();
-        Log.i(TAG,"switchPlaymode");
+        Log.i(TAG, "switchPlaymode");
     }
 
 
@@ -352,7 +387,7 @@ public class ALiYunServer
 
     //music
 
-    public void loveMusic( String itemId)
+    public void loveMusic(String itemId)
     {
         TransitoryRequest transitoryRequest = new TransitoryRequest();
         transitoryRequest.setMethod("mtop.openalink.pal.itemtofav.add");
@@ -384,7 +419,8 @@ public class ALiYunServer
 
 
     public void getChannelDetailList(String uuid, String from, String size, String direct,
-                                      String channelId, String channelType, String collectionID) {
+                                     String channelId, String channelType, String collectionID)
+    {
         TransitoryRequest transitoryRequest = new TransitoryRequest();
         transitoryRequest.setMethod("mtop.openalink.pal.channeldetaillist.get");
         transitoryRequest.needToken = false;
@@ -397,38 +433,138 @@ public class ALiYunServer
         transitoryRequest.putParam("collectionId", collectionID);
 
         ALinkBusinessEx biz = new ALinkBusinessEx();
-        biz.request(transitoryRequest, new ALinkBusinessEx.IListener() {
+        biz.request(transitoryRequest, new ALinkBusinessEx.IListener()
+        {
             @Override
-            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse) {
+            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse)
+            {
                 Log.i(TAG, "getChannelList onSuccess");
-                if (transitoryResponse != null && transitoryResponse.data != null) {
-                    Log.i(TAG, "getChannelList data: "+ transitoryResponse.data.toString());
+                if (transitoryResponse != null && transitoryResponse.data != null)
+                {
+                    Log.i(TAG, "getChannelList data: " + transitoryResponse.data.toString());
                 }
             }
 
             @Override
-            public void onFailed(TransitoryRequest transitoryRequest, AError aError) {
+            public void onFailed(TransitoryRequest transitoryRequest, AError aError)
+            {
                 Log.i(TAG, "getChannelList onFailed");
             }
         });
     }
 
-    private boolean needRequestPermissions()
+    public void getChannelList()
     {
 
-        int recordPermission = ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.RECORD_AUDIO);
-        if (recordPermission != PackageManager.PERMISSION_GRANTED)
+
+        TransitoryRequest transitoryRequest = new TransitoryRequest();
+        transitoryRequest.setMethod("mtop.openalink.pal.douglaschannellist.get");
+        transitoryRequest.needToken = false;
+        transitoryRequest.putParam("uuid", AlinkDevice.getInstance().getDeviceUUID());
+
+        ALinkBusinessEx biz = new ALinkBusinessEx();
+        biz.request(transitoryRequest, new ALinkBusinessEx.IListener()
         {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, android.Manifest.permission.RECORD_AUDIO))
+            @Override
+            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse)
             {
-                ActivityCompat.requestPermissions((Activity) mContext, new String[]{
-                        android.Manifest.permission.RECORD_AUDIO,
-                        android.Manifest.permission.WRITE_SETTINGS}, 200);
+                Log.i(TAG, "getChannelList onSuccess");
+                List<MusicChannel> mMusicChannelList = new ArrayList<MusicChannel>();
+                try
+                {
+                    String channelData = (String) transitoryResponse.data;
+                    Log.i(TAG, "getChannelList channelData: " + channelData);
+                    JSONObject channelDataObject = JSON.parseObject(channelData);
+                    JSONArray channelList = channelDataObject.getJSONArray("data");
+                    String mRecentChannelId = channelDataObject.getString("recentChannelId");
+                    if (channelList != null && channelList.size() > 0)
+                    {
+                        mMusicChannelList.clear();
+                        for (int i = 0; i < channelList.size(); i++)
+                        {
+                            JSONObject channelItem = (JSONObject) channelList.get(i);
+
+                            MusicChannel musicChannel = new MusicChannel();
+                            musicChannel.auid = channelItem.getString("auid");
+                            musicChannel.channelId = channelItem.getString("id");
+                            musicChannel.channelLogo = channelItem.getString("logo");
+                            musicChannel.channelName = channelItem.getString("name");
+                            musicChannel.channelType = channelItem.getString("channelType");
+                            musicChannel.detailEditable = channelItem.getString("detailEditable");
+                            musicChannel.removable = channelItem.getString("removable");
+                            musicChannel.seqNum = channelItem.getString("seqNum");
+                            musicChannel.supportCache = channelItem.getString("supportCache");
+                            mMusicChannelList.add(musicChannel);
+                        }
+                    }
+                } catch (Exception e)
+                {
+
+                }
+            }
+
+            @Override
+            public void onFailed(TransitoryRequest transitoryRequest, AError aError)
+            {
+                Log.i(TAG, "getChannelList onFailed");
+            }
+        });
+
+
+    }
+
+    public void bindDevice()
+    {
+        TransitoryRequest transitoryRequest = new TransitoryRequest();
+        transitoryRequest.setMethod("mtop.openalink.app.core.user.binddevice");
+
+        transitoryRequest.putParam("uuid", mUUID);
+
+        ALinkBusinessEx biz = new ALinkBusinessEx();
+        biz.request(transitoryRequest, new ALinkBusinessEx.IListener()
+        {
+            @Override
+            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse)
+            {
+                Log.i(TAG, "bindDevice onSuccess");
+            }
+
+            @Override
+            public void onFailed(TransitoryRequest transitoryRequest, AError aError)
+            {
+                Log.i(TAG, "bindDevice onFailed");
+            }
+        });
+    }
+
+    public void accountLogin()
+    {
+
+        AlinkLoginBusiness.getInstance().login(mContext, null);
+
+    }
+
+    private void initPushTunnel()
+    {
+        DeviceBusiness deviceBiz = new DeviceBusiness();
+        deviceBiz.startWatching(DeviceBusiness.FEATURE_DOWNSTREAM_WATCHER);
+        deviceBiz.setDownstreamListener(new IOnPushListener()
+        {
+            @Override
+            public void onCommand(String s)
+            {
+                Toast.makeText(mContext, "收到下推数据", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public boolean filter(String s)
+            {
                 return true;
             }
-        }
-        return false;
+        }, true);
     }
+
+
 
 
     public enum AliyunState
