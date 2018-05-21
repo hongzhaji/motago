@@ -4,8 +4,29 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:layout_marginTop="38dp"
-    android:layout_marginBottom="38dp"
+              android:layout_marginBottom="38dp"
 >
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="30dp"
+                    android:background="@android:color/white"
+                    android:layout_marginTop="20dp"
+    >
+        <CheckBox android:layout_width="wrap_content" android:layout_height="match_parent"
+        android:text="正在播放"
+                  android:background="@null"
+                  android:button="@null"
+                  android:id="@+id/mota_music_list_play"
+                  android:layout_marginLeft="20dp"
+        />
+        <CheckBox android:layout_width="wrap_content" android:layout_height="match_parent"
+                  android:text="我的收藏"
+                  android:background="@null"
+                  android:button="@null"
+                  android:id="@+id/mota_music_list_loved"
+                  android:layout_toRightOf="@id/mota_music_list_play"
+                  android:layout_marginLeft="80dp"
+        />
+    </RelativeLayout>
+
     <android.support.v4.view.ViewPager android:layout_width="match_parent" android:layout_height="match_parent"
                                        android:id="@+id/list_music_pageview"
                                        android:layout_margin="20dp"

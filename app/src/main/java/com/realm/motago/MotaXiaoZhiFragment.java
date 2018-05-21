@@ -3,6 +3,7 @@ package com.realm.motago;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -95,10 +96,17 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
         String val = "";
         try
         {
-
+            String mac = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                mac = HelpUtil.getMacAddress();
+            } else
+            {
+                mac = HelpUtil.getLocalMacAddressFromWifiInfo(getContext());
+            }
             // http://smart.aliyun.com/download.htm?ver=2.0&model=ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST&mac=11:12:F2:F9:F9:F8&sn=11:12:F2:F9:F9:F8
             val = "http://smart.aliyun.com/download.htm?ver=2.0&model=" + "ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST"
-                    + "&mac=" + HelpUtil.getMacAddress()
+                    + "&mac=" + mac
                     + "&sn=" + HelpUtil.getAndroidOsSN();
 
         } catch (Exception e)

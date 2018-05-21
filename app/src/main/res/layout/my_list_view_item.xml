@@ -30,12 +30,11 @@
             android:layout_marginLeft="130dp"
             android:textColor="@android:color/white"
     />
-    <CheckBox
+    <Button
             android:layout_width="22dp"
             android:layout_height="19dp" android:id="@+id/list_view_item_music_loved"
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
-            android:button="@null"
             android:background="@drawable/music_sel_loved"
             android:layout_marginRight="80dp"
 

@@ -1,27 +1,25 @@
 package com.realm.motago.server;
 
-import android.app.Activity;
+
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.support.v4.app.ActivityCompat;
+
 import android.util.Log;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.aliyun.alink.business.account.OALoginBusiness;
-import com.aliyun.alink.business.alink.ALinkBusiness;
-import com.aliyun.alink.business.alink.ALinkBusinessEx;
-import com.aliyun.alink.business.alink.ALinkRequest;
-import com.aliyun.alink.business.downstream.DeviceBusiness;
-import com.aliyun.alink.business.login.AlinkLoginBusiness;
+import com.alibaba.sdk.android.openaccount.Environment;
+import com.aliyun.alink.AlinkSDK;
 
-import com.aliyun.alink.device.AlinkDevice;
-import com.aliyun.alink.device.alink.DeviceLinkBusiness;
-import com.aliyun.alink.device.alink.DeviceLinkRequest;
-import com.aliyun.alink.device.alink.DeviceLinkResponse;
+import com.aliyun.alink.business.account.OALoginBusiness;
+
+import com.aliyun.alink.business.alink.ALinkBusinessEx;
+
+import com.aliyun.alink.business.downstream.DeviceBusiness;
+
+import com.aliyun.alink.business.login.IAlinkLoginCallback;
+
+import com.aliyun.alink.linksdk.tools.ALog;
 import com.aliyun.alink.pal.business.*;
 import com.aliyun.alink.sdk.net.anet.api.AError;
 import com.aliyun.alink.sdk.net.anet.api.persistentnet.IOnPushListener;
@@ -40,6 +38,8 @@ import java.util.List;
 
 /**
  * Created by Skyyao on 2018\5\8 0008.
+ * http://smart.aliyun.com/business/app/download_andorid_pic.htm?spm=0.0.0.0.KqgOIy  阿里云远程登录
+ *
  */
 
 public class ALiYunServer
@@ -456,11 +456,10 @@ public class ALiYunServer
     public void getChannelList()
     {
 
-
         TransitoryRequest transitoryRequest = new TransitoryRequest();
         transitoryRequest.setMethod("mtop.openalink.pal.douglaschannellist.get");
         transitoryRequest.needToken = false;
-        transitoryRequest.putParam("uuid", AlinkDevice.getInstance().getDeviceUUID());
+        transitoryRequest.putParam("uuid", "");
 
         ALinkBusinessEx biz = new ALinkBusinessEx();
         biz.request(transitoryRequest, new ALinkBusinessEx.IListener()
@@ -511,6 +510,9 @@ public class ALiYunServer
         });
 
 
+
+
+
     }
 
     public void bindDevice()
@@ -540,7 +542,29 @@ public class ALiYunServer
     public void accountLogin()
     {
 
-        AlinkLoginBusiness.getInstance().login(mContext, null);
+
+
+        OALoginBusiness oaLoginBusiness = new OALoginBusiness();
+        oaLoginBusiness.init(mContext, Environment.ONLINE, new IAlinkLoginCallback()
+        {
+            @Override
+            public void onSuccess()
+            {
+                Log.i("tyty"," -------- success");
+            }
+
+            @Override
+            public void onFailure(int i, String s)
+            {
+                Log.i("tyty"," -------- onFailure = "+s);
+            }
+        });
+
+        AlinkSDK.init(mContext,"24898847",oaLoginBusiness);
+
+
+
+
 
     }
 

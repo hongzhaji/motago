@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.realm.motago.MotaPlayListFragment;
 import com.realm.motago.R;
 import com.realm.motago.element.MyMusicInfo;
 
@@ -19,6 +20,7 @@ public class MyListViewAdapter extends BaseAdapter
 {
     private List<MyMusicInfo> myMusicInfos;
     private Context context;
+    private MotaPlayListFragment.IMusicPlayHelp help;
 
     public MyListViewAdapter(List<MyMusicInfo> myMusicInfos, Context context)
     {
@@ -48,41 +50,54 @@ public class MyListViewAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         ViewHolder holder = null;
-        if(convertView == null)
+        if (convertView == null)
         {
-            convertView =  LayoutInflater.from(context).inflate(R.layout.my_list_view_item,parent,false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.my_list_view_item, parent, false);
             TextView name = convertView.findViewById(R.id.list_view_item_music_name);
             TextView artis = convertView.findViewById(R.id.list_view_item_music_artis);
-            CheckBox loved = convertView.findViewById(R.id.list_view_item_music_loved);
-            holder = new ViewHolder(name,artis,loved);
+            Button loved = convertView.findViewById(R.id.list_view_item_music_loved);
+            holder = new ViewHolder(name, artis, loved);
             convertView.setTag(holder);
-        }
-        else
+        } else
         {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.cbLoved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        holder.cbLoved.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            public void onClick(View v)
             {
-                Log.i("tyty","loved = "+isChecked);
+                help.cancelFavorite("", "", "");
             }
         });
         holder.tvName.setText(myMusicInfos.get(position).musicName);
         holder.tvArtis.setText(myMusicInfos.get(position).musicArtis);
+        convertView.setClickable(true);
+        convertView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                help.quickPlay("", "", "", "");
+            }
+        });
 
         return convertView;
     }
 
+    public void setHelp(MotaPlayListFragment.IMusicPlayHelp help)
+    {
+        this.help = help;
+    }
+
     class ViewHolder
     {
-       public TextView tvName;
-        public  TextView tvArtis;
-        public CheckBox  cbLoved;
+        public TextView tvName;
+        public TextView tvArtis;
+        public Button cbLoved;
 
-        public ViewHolder(TextView tvName, TextView tvArtis, CheckBox cbLoved)
+        public ViewHolder(TextView tvName, TextView tvArtis, Button cbLoved)
         {
             this.tvName = tvName;
             this.tvArtis = tvArtis;

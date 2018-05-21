@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import com.realm.motago.MotaPlayListFragment;
 import com.realm.motago.element.MyMusicInfo;
 
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import java.util.List;
 public class PlayListAdapter extends PagerAdapter
 {
     private List<ListView> mViews;
+    private MyListViewAdapter playListAdapter;
+    private MyListViewAdapter lovedListAdapter;
 
 
     public PlayListAdapter(Context context)
@@ -25,21 +29,22 @@ public class PlayListAdapter extends PagerAdapter
         mViews = new ArrayList<ListView>();
 
         List<MyMusicInfo> infos = new ArrayList<MyMusicInfo>();
-        infos.add(new MyMusicInfo("aa","bb"));
-        infos.add(new MyMusicInfo("aa","bb"));
-        infos.add(new MyMusicInfo("aa","bb"));
+        infos.add(new MyMusicInfo("aa", "bb"));
+        infos.add(new MyMusicInfo("aa", "bb"));
+        infos.add(new MyMusicInfo("aa", "bb"));
 
         ListView mPlayListView = new ListView(context);
         mPlayListView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        mPlayListView.setAdapter(new MyListViewAdapter(infos,context));
+        playListAdapter = new MyListViewAdapter(infos, context);
+        mPlayListView.setAdapter(playListAdapter);
         ListView mPlayLovedView = new ListView(context);
         mPlayLovedView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        mPlayLovedView.setAdapter(new MyListViewAdapter(infos,context));
+        lovedListAdapter = new MyListViewAdapter(infos, context);
+        mPlayLovedView.setAdapter(lovedListAdapter);
         mViews.add(mPlayListView);
         mViews.add(mPlayLovedView);
 
         //set adepter
-
 
 
     }
@@ -74,5 +79,11 @@ public class PlayListAdapter extends PagerAdapter
     public int getItemPosition(Object object)
     {
         return super.getItemPosition(object);
+    }
+
+    public void setHelp(MotaPlayListFragment.IMusicPlayHelp help)
+    {
+        lovedListAdapter.setHelp(help);
+        playListAdapter.setHelp(help);
     }
 }

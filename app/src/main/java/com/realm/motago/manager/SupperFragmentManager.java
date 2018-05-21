@@ -21,7 +21,7 @@ import java.util.logging.Handler;
  * Created by Skyyao on 2018\5\4 0004.
  */
 
-public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.IAliyunMusicHelp
+public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.IAliyunMusicHelp, MotaPlayListFragment.IMusicPlayHelp
 {
     public static final int MOTA_FRAGMENT_MAIN = 0;
     public static final int MOTA_FRAGMENT_MUSIC = 1;
@@ -87,7 +87,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         initFragment();
         initEventCallback();
 
-        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
+        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_LIST]).commit();
         mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
 
         switchAliyunState(false);
@@ -289,6 +289,20 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public void aliyunLoveMusic(boolean love)
     {
             mainServer.loveMusic("");
+    }
+
+    @Override
+    public void quickPlay(String uuid, String type, String itemId, String collectionId)
+    {
+        // play
+
+    }
+
+    @Override
+    public void cancelFavorite(String uuid, String itemId, String channelId)
+    {
+        //cancel fover
+
     }
 
 
