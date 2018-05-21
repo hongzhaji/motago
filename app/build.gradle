@@ -5,21 +5,63 @@ android {
     defaultConfig {
         applicationId "com.realm.motago"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
+
+
+    signingConfigs {
+        debug {
+            keyAlias 'key0'
+            keyPassword '123456'
+            storeFile file('configure/aaa.jks')
+            storePassword '123456'
+        }
+        release
+                {
+                    keyAlias 'key0'
+                    keyPassword '123456'
+                    storeFile file('configure/aaa.jks')
+                    storePassword '123456'
+                }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters "armeabi" //仅保留armeabi架构的so
+            }
+            signingConfig signingConfigs.debug
+        }
+
+        debug {
+            zipAlignEnabled true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ndk {
+                abiFilters "armeabi"//仅保留armeabi架构的so
+            }
+            signingConfig signingConfigs.release
         }
     }
     repositories {
         flatDir {
             dirs 'libs'
         }
+    }
+
+    dexOptions {
+        jumboMode true
+        javaMaxHeapSize "2048M"
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -29,8 +71,8 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'com.android.support:design:26.1.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile(name: 'pal_business-3.0.1', ext: 'aar')
     compile(name: 'linkplay_sensory-1.0.1', ext: 'aar')
     compile(name: 'XZRecognizer-3.0.1', ext: 'aar')
@@ -38,4 +80,13 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.3'
     compile 'com.aliyun.alink.external:exoplayer:1.4.2'
     implementation files('libs/core-3.3.0.jar')
+
+    //登陆
+    // openAccount
+    compile 'com.alibaba.sdk.android.openaccount:openaccount-ui-default:3.0.4@aar'
+    compile 'com.alibaba.sdk.android.openaccount:openaccount-core:3.0.4@aar'
+    compile 'com.alibaba.sdk.android.openaccount:openaccount-ext:3.0.4@aar'
+
+    compile 'com.aliyun.alink:opensdk:0.1.3.2'
+    compile 'com.android.support:multidex:1.0.1'
 }
