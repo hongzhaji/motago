@@ -105,9 +105,10 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
                 mac = HelpUtil.getLocalMacAddressFromWifiInfo(getContext());
             }
             // http://smart.aliyun.com/download.htm?ver=2.0&model=ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST&mac=11:12:F2:F9:F9:F8&sn=11:12:F2:F9:F9:F8
-            val = "http://smart.aliyun.com/download.htm?ver=2.0&model=" + "ALINKTEST_ENTERTAINMENT_ATALK_RTOS_TEST"
+            val = "http://smart.aliyun.com/download.htm?ver=2.0&model=" + "HUIJU_ENTERTAINMENT_ATALK_E3"
                     + "&mac=" + mac
                     + "&sn=" + HelpUtil.getAndroidOsSN();
+            Log.i("tyty","mac = "+mac +" sn"+HelpUtil.getAndroidOsSN());
 
         } catch (Exception e)
         {

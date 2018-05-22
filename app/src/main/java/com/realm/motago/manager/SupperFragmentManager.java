@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import android.widget.Toast;
 import com.realm.motago.*;
 import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.Msg;
@@ -87,7 +88,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         initFragment();
         initEventCallback();
 
-        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_LIST]).commit();
+        motaManager.beginTransaction().show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
         mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
 
         switchAliyunState(false);
@@ -148,7 +149,6 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
         }
 
-
         return false;
     }
 
@@ -177,6 +177,12 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             mVoiceInput.setVisibility(View.VISIBLE);
         }
     }
+
+    public  void  goToChannelList()
+    {
+
+    }
+
 
     public void finish()
     {
@@ -265,15 +271,22 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     @Override
     public void aliyunSetPlayMode(int mode)
     {
-        mainServer.getChannelList();
+        //mainServer.getChannelList();
     }
 
     @Override
     public void showPlayList()
     {
-            mainServer.accountLogin();
        // Error:Error converting bytecode to dex:
     //Cause: com.android.dex.DexException: Multiple dex files define Lcom/alibaba/mtl/appmonitor/AppMonitorDelegate$Stat;
+
+        try
+        {
+            mainServer.getChannelList();
+        }catch (Exception e)
+        {
+            Toast.makeText(mContext,"请扫码登录",Toast.LENGTH_LONG).show();
+        }
 
 
 

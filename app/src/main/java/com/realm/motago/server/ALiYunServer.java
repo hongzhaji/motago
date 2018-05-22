@@ -4,36 +4,22 @@ package com.realm.motago.server;
 import android.content.Context;
 
 import android.util.Log;
-import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.sdk.android.openaccount.Environment;
-import com.aliyun.alink.AlinkSDK;
-
-import com.aliyun.alink.business.account.OALoginBusiness;
 
 import com.aliyun.alink.business.alink.ALinkBusinessEx;
 
-import com.aliyun.alink.business.downstream.DeviceBusiness;
-
-import com.aliyun.alink.business.login.IAlinkLoginCallback;
-
-import com.aliyun.alink.linksdk.tools.ALog;
+import com.aliyun.alink.device.AlinkDevice;
 import com.aliyun.alink.pal.business.*;
 import com.aliyun.alink.sdk.net.anet.api.AError;
-import com.aliyun.alink.sdk.net.anet.api.persistentnet.IOnPushListener;
 import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryRequest;
 import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryResponse;
 import com.realm.motago.HelpUtil;
 import com.realm.motago.element.*;
 import com.realm.motago.manager.SupperFragmentManager;
-import com.wsf.squareup.okhttp.internal.http.HttpEngine;
-
-import javax.crypto.spec.OAEPParameterSpec;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 
 /**
@@ -79,7 +65,6 @@ public class ALiYunServer
         this.mContext = context;
         this.mainManager = mainManager;
         isAliyunMusicMediaPlaying = false;
-        initPushTunnel();
     }
 
     private static final int SERVER_ONLINE = 201;
@@ -221,6 +206,11 @@ public class ALiYunServer
                 } else if (status == TYPE_PAL_STATUS_MUSIC_ERROR || status == TYPE_PAL_STATUS_MUSIC_COMPLETE)
                 {
                     isAliyunMusicMediaPlaying = false;
+                }
+                else if(status == 110)
+                {
+                    isAliyunMusicMediaPlaying = false;
+
                 }
 
 
@@ -418,7 +408,7 @@ public class ALiYunServer
     }
 
 
-    public void getChannelDetailList(String uuid, String from, String size, String direct,
+    private void getChannelDetailList(String uuid, String from, String size, String direct,
                                      String channelId, String channelType, String collectionID)
     {
         TransitoryRequest transitoryRequest = new TransitoryRequest();
@@ -459,7 +449,8 @@ public class ALiYunServer
         TransitoryRequest transitoryRequest = new TransitoryRequest();
         transitoryRequest.setMethod("mtop.openalink.pal.douglaschannellist.get");
         transitoryRequest.needToken = false;
-        transitoryRequest.putParam("uuid", "");
+        transitoryRequest.putParam("uuid", AlinkDevice.getInstance().getDeviceUUID());
+
 
         ALinkBusinessEx biz = new ALinkBusinessEx();
         biz.request(transitoryRequest, new ALinkBusinessEx.IListener()
@@ -494,7 +485,21 @@ public class ALiYunServer
                             musicChannel.seqNum = channelItem.getString("seqNum");
                             musicChannel.supportCache = channelItem.getString("supportCache");
                             mMusicChannelList.add(musicChannel);
+                            Log.i(TAG,musicChannel.toString());
+                            // 629330 = 随便听听
+                          //  if(musicChannel.channelId.equals("629330"))
+                           // {
+                                //find a musicChannel, go to channel list.
+
+                                getChannelDetailList(AlinkDevice.getInstance().getDeviceUUID(),"0","10","1",musicChannel.channelId,musicChannel.channelType,"0");
+
+                              //  return;
+                           // }
+
                         }
+
+
+
                     }
                 } catch (Exception e)
                 {
@@ -515,78 +520,6 @@ public class ALiYunServer
 
     }
 
-    public void bindDevice()
-    {
-        TransitoryRequest transitoryRequest = new TransitoryRequest();
-        transitoryRequest.setMethod("mtop.openalink.app.core.user.binddevice");
-
-        transitoryRequest.putParam("uuid", mUUID);
-
-        ALinkBusinessEx biz = new ALinkBusinessEx();
-        biz.request(transitoryRequest, new ALinkBusinessEx.IListener()
-        {
-            @Override
-            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse)
-            {
-                Log.i(TAG, "bindDevice onSuccess");
-            }
-
-            @Override
-            public void onFailed(TransitoryRequest transitoryRequest, AError aError)
-            {
-                Log.i(TAG, "bindDevice onFailed");
-            }
-        });
-    }
-
-    public void accountLogin()
-    {
-
-
-
-        OALoginBusiness oaLoginBusiness = new OALoginBusiness();
-        oaLoginBusiness.init(mContext, Environment.ONLINE, new IAlinkLoginCallback()
-        {
-            @Override
-            public void onSuccess()
-            {
-                Log.i("tyty"," -------- success");
-            }
-
-            @Override
-            public void onFailure(int i, String s)
-            {
-                Log.i("tyty"," -------- onFailure = "+s);
-            }
-        });
-
-        AlinkSDK.init(mContext,"24898847",oaLoginBusiness);
-
-
-
-
-
-    }
-
-    private void initPushTunnel()
-    {
-        DeviceBusiness deviceBiz = new DeviceBusiness();
-        deviceBiz.startWatching(DeviceBusiness.FEATURE_DOWNSTREAM_WATCHER);
-        deviceBiz.setDownstreamListener(new IOnPushListener()
-        {
-            @Override
-            public void onCommand(String s)
-            {
-                Toast.makeText(mContext, "收到下推数据", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public boolean filter(String s)
-            {
-                return true;
-            }
-        }, true);
-    }
 
 
 
