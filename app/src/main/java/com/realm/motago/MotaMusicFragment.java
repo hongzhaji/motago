@@ -77,7 +77,7 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
     {
         this.musicInfo = musicInfo;
         invaluedateMusicInfo();
-        ;
+
     }
 
     //long
@@ -165,7 +165,7 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             {
                 if (musicInfo != null)
                 {
-                    musicHelp.showPlayList(AlinkDevice.getInstance().getDeviceUUID(), "0", "10", "1", "" + musicInfo.getChannelId(), "" + musicInfo.getItemType(), "" + musicInfo.getCollectionId());
+                    musicHelp.showPlayList(AlinkDevice.getInstance().getDeviceUUID(), "0", "10", "1", "" + musicInfo.getChannelId(), "" + musicInfo.getItemType(), "" + musicInfo.getCollectionId(),""+musicInfo.getId());
                 }
 
             }
@@ -223,10 +223,8 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
         musicAtist.setText(musicInfo.getArtist());
         musicName.setText(musicInfo.getName());
         playButton.setBackgroundResource(R.drawable.music_play_sel_play);
-        if (musicInfo.isLoved())
-        {
-            musicLoved.setChecked(true);
-        }
+        Log.i("tyty","-- love = "+musicInfo.isLoved());
+     musicLoved.setChecked(musicInfo.isLoved());
         totalMusicTime.setText(musicInfo.getDuration());
     }
 
@@ -289,7 +287,7 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
 
         void aliyunSetPlayMode(int mode);
 
-        void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID);
+        void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID,String itemId);
 
         boolean isPlaying();
 

@@ -3,13 +3,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
                 android:gravity="center_vertical"
+    android:layout_margin="8dp"
 >
 
 
 
     <TextView
             android:text="TextView"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:id="@+id/list_view_item_music_name"
             android:layout_alignParentLeft="true"
@@ -17,6 +18,8 @@
             android:singleLine="true"
             android:textColor="@android:color/white"
             android:layout_marginLeft="20dp"
+        android:textSize="18px"
+        android:ellipsize="end"
 
     />
     <TextView
@@ -29,6 +32,8 @@
             android:singleLine="true"
             android:layout_marginLeft="130dp"
             android:textColor="@android:color/white"
+        android:textSize="18px"
+        android:ellipsize="end"
     />
     <Button
             android:layout_width="22dp"

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.realm.motago.MotaPlayListFragment;
+import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.MyMusicInfo;
 
 import java.util.ArrayList;
@@ -24,14 +25,10 @@ public class PlayListAdapter extends PagerAdapter
     private MyListViewAdapter lovedListAdapter;
 
 
-    public PlayListAdapter(Context context)
+    public PlayListAdapter(Context context, List<AliyunMusicInfo> infos)
     {
         mViews = new ArrayList<ListView>();
 
-        List<MyMusicInfo> infos = new ArrayList<MyMusicInfo>();
-        infos.add(new MyMusicInfo("aa", "bb"));
-        infos.add(new MyMusicInfo("aa", "bb"));
-        infos.add(new MyMusicInfo("aa", "bb"));
 
         ListView mPlayListView = new ListView(context);
         mPlayListView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

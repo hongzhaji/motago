@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import android.widget.Toast;
+
+import com.aliyun.alink.device.AlinkDevice;
 import com.realm.motago.*;
 import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.Msg;
 import com.realm.motago.server.ALiYunServer;
 
+import java.util.List;
 import java.util.logging.Handler;
 
 /**
@@ -61,7 +64,17 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                     int time = msg.arg2;
                     ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicCurrentTime("" + time, (int) msg.obj);
                     return;
+                }else if(msg.what == 3)
+                {
+
+                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setMusiclistAdapter((List<AliyunMusicInfo>)msg.obj);
+                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setHelp(SupperFragmentManager.this);
+                    translateToMotagoListFragment();
+
+                    return;
                 }
+
+
 
                 //set music info and show music fragment
                 ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicInfo((AliyunMusicInfo) msg.obj);
@@ -93,7 +106,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
         switchAliyunState(false);
         mainServer.startALinkServer();
-        mainServer.startSensory();
+
     }
 
 
@@ -113,6 +126,15 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         msg.obj = musicInfo;
         msg.sendToTarget();
 
+    }
+
+    public void  setListAdepterAndAliyunMusicIfos(List<AliyunMusicInfo> infos)
+    {
+        Message msg = mUIHandler.obtainMessage();
+        msg.arg1 = MOTA_FRAGMENT_MUSIC;
+        msg.obj = infos;
+        msg.what = 3;
+        msg.sendToTarget();
     }
 
     public void setMusicCurrentTIme(int time, int percent)
@@ -188,7 +210,11 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public void finish()
     {
         mainServer.stopALinkServer();
-        mainServer.stopSensory();
+        if(mainServer.mIsSensorStart)
+        {
+            mainServer.stopSensory();
+        }
+
     }
 
     private void translateToMotagoMusicFragment()
@@ -198,6 +224,15 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         transaction.show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
         mCurrentFragmentIndex = MOTA_FRAGMENT_MUSIC;
         switchAliyunState(false);
+    }
+
+    private  void  translateToMotagoListFragment()
+    {
+        FragmentTransaction transaction = motaManager.beginTransaction();
+        transaction.hide(kindFragment[mCurrentFragmentIndex]);
+        transaction.show(kindFragment[MOTA_FRAGMENT_LIST]).commit();
+        mCurrentFragmentIndex = MOTA_FRAGMENT_LIST;
+
     }
 
     private void initFragment()
@@ -277,10 +312,9 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     }
 
     @Override
-    public void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID)
+    public void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID,String itemId)
     {
-        // Error:Error converting bytecode to dex:
-        //Cause: com.android.dex.DexException: Multiple dex files define Lcom/alibaba/mtl/appmonitor/AppMonitorDelegate$Stat;
+      mainServer.getPlayList("1", AlinkDevice.getInstance().getDeviceUUID(),from,size,direct,channelId,collectionID,itemId);
 
 
     }
@@ -294,7 +328,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     @Override
     public void aliyunLoveMusic(int loveid)
     {
-        mainServer.loveMusic("");
+        mainServer.loveMusic(""+loveid);
     }
 
     @Override

@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import com.aliyun.alink.device.AlinkDevice;
 import com.realm.motago.MotaPlayListFragment;
 import com.realm.motago.R;
+import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.MyMusicInfo;
 
 import java.util.List;
@@ -18,11 +21,11 @@ import java.util.List;
 
 public class MyListViewAdapter extends BaseAdapter
 {
-    private List<MyMusicInfo> myMusicInfos;
+    private List<AliyunMusicInfo> myMusicInfos;
     private Context context;
     private MotaPlayListFragment.IMusicPlayHelp help;
 
-    public MyListViewAdapter(List<MyMusicInfo> myMusicInfos, Context context)
+    public MyListViewAdapter(List<AliyunMusicInfo> myMusicInfos, Context context)
     {
         this.myMusicInfos = myMusicInfos;
         this.context = context;
@@ -47,7 +50,7 @@ public class MyListViewAdapter extends BaseAdapter
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, ViewGroup parent)
     {
         ViewHolder holder = null;
         if (convertView == null)
@@ -71,15 +74,16 @@ public class MyListViewAdapter extends BaseAdapter
                 help.cancelFavorite("", "", "");
             }
         });
-        holder.tvName.setText(myMusicInfos.get(position).musicName);
-        holder.tvArtis.setText(myMusicInfos.get(position).musicArtis);
+        holder.tvName.setText(myMusicInfos.get(position).getName());
+        holder.tvArtis.setText(myMusicInfos.get(position).getArtist());
         convertView.setClickable(true);
         convertView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                help.quickPlay("", "", "", "");
+                AliyunMusicInfo info = myMusicInfos.get(position);
+                help.quickPlay(AlinkDevice.getInstance().getDeviceUUID(), ""+info.getItemType(), ""+info.getId(), ""+info.getCollectionId());
             }
         });
 

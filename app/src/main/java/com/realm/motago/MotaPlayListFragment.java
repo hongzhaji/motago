@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import com.realm.motago.adapter.PlayListAdapter;
+import com.realm.motago.element.AliyunMusicInfo;
+
+import java.util.List;
 
 /**
  * Created by Skyyao on 2018\5\15 0015.
@@ -41,8 +44,8 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
 
         viewPager = v.findViewById(R.id.list_music_pageview);
 
-        adapter = new PlayListAdapter(getContext());
-        viewPager.setAdapter(adapter);
+        //adapter = new PlayListAdapter(getContext(),);
+        //viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
@@ -73,6 +76,27 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
         });
 
         return v;
+    }
+
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if(!hidden)
+        {
+
+        }
+
+
+    }
+
+
+
+    public void setMusiclistAdapter(List<AliyunMusicInfo> infos)
+    {
+        adapter = new PlayListAdapter(getContext(),infos);
+        viewPager.setAdapter(adapter);
     }
 
     public void setHelp(IMusicPlayHelp help)
