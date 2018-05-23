@@ -1,6 +1,8 @@
 package com.realm.motago;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.aliyun.alink.device.AlinkDevice;
 import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.manager.INavigationClick;
 
@@ -32,11 +35,20 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
     private TextView totalMusicTime;
     private TextView currentMusicTime;
     private SeekBar musicSeekBar;
+    private Handler mhadler;
 
 
     public MotaMusicFragment()
     {
-
+        mhadler = new Handler()
+        {
+            @Override
+            public void handleMessage(Message msg)
+            {
+                super.handleMessage(msg);
+                invaluedateMusicPlayStateUI();
+            }
+        };
     }
 
     @Nullable
@@ -69,20 +81,40 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
     }
 
     //long
-    public void setMusicCurrentTime(String time,int percent)
+    public void setMusicCurrentTime(String time, int percent)
     {
 
         if (time.equals("") || musicInfo.getDuration().equals(""))
         {
-            Log.e("tyty", "time can't be null");
-            currentMusicTime.setText("");
-            return;
+
+            //set recompense total time.
+            long curTotalTime = musicHelp.getRecompenseTotalTime();
+            if (curTotalTime == -1)
+            {
+                Log.e("tyty", "time can't be null");
+                currentMusicTime.setText("");
+                return;
+            }
+            try
+            {
+                Date totalDate = longToDate(curTotalTime);
+                String mmssTotal = dateToString(totalDate, "mm:ss");
+                totalMusicTime.setText(mmssTotal);
+                musicInfo.setDuration(mmssTotal);
+            } catch (Exception e)
+            {
+                Log.e("tyty", "time can't be null");
+                currentMusicTime.setText("");
+                return;
+            }
+
+
         }
         try
         {
             long curTime = new Long(time);
             Date date = longToDate(curTime);
-            currentMusicTime.setText(dateToString(date,"mm:ss"));
+            currentMusicTime.setText(dateToString(date, "mm:ss"));
             musicSeekBar.setProgress(percent);
             Log.i("tyty", "data = " + date.toString() + "  percent = " + percent);
 
@@ -131,7 +163,11 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             @Override
             public void onClick(View v)
             {
-                musicHelp.showPlayList();
+                if (musicInfo != null)
+                {
+                    musicHelp.showPlayList(AlinkDevice.getInstance().getDeviceUUID(), "0", "10", "1", "" + musicInfo.getChannelId(), "" + musicInfo.getItemType(), "" + musicInfo.getCollectionId());
+                }
+
             }
         });
         Button lastButtom = v.findViewById(R.id.music_play_last);
@@ -166,10 +202,20 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                musicHelp.aliyunLoveMusic(isChecked);
+                if (isChecked)
+                {
+                    musicHelp.aliyunLoveMusic(musicInfo.getId());
+                } else
+                {
+                    musicHelp.cancelLovedMusic(AlinkDevice.getInstance().getDeviceUUID(), "" + musicInfo.getId(), "" + musicInfo.getChannelId());
+                }
+
             }
         });
 
+
+        //update play state ui .immediately
+        invaluedateMusicPlayStateUI();
     }
 
     private void invaluedateMusicInfo()
@@ -182,6 +228,20 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             musicLoved.setChecked(true);
         }
         totalMusicTime.setText(musicInfo.getDuration());
+    }
+
+    //alone
+    private void invaluedateMusicPlayStateUI()
+    {
+        if (musicHelp.isPlaying())
+        {
+            playButton.setBackgroundResource(R.drawable.music_play_sel_play);
+
+        } else
+        {
+            playButton.setBackgroundResource(R.drawable.music_play_sel_pause);
+        }
+        mhadler.sendEmptyMessageDelayed(1, 1000);
     }
 
 
@@ -229,12 +289,16 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
 
         void aliyunSetPlayMode(int mode);
 
-        void showPlayList();
+        void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID);
 
         boolean isPlaying();
 
-        void aliyunLoveMusic(boolean love);
+        void aliyunLoveMusic(int itemid);
 
+        //time recompense
+        long getRecompenseTotalTime();
+
+        void cancelLovedMusic(String uuid, String itemId, String channelId);
 
     }
 }

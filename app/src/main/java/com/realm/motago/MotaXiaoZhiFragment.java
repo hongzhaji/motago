@@ -39,6 +39,17 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
     public MotaXiaoZhiFragment()
     {
 
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        View v = inflater.inflate(R.layout.fragment_mota_xiaozhi, container, false);
+        qrImageView = v.findViewById(R.id.qr_iv);
+
+
+        //init qr
         new Thread(new Runnable()
         {
             @Override
@@ -54,15 +65,6 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
                 }
             }
         }).start();
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
-        View v = inflater.inflate(R.layout.fragment_mota_xiaozhi, container, false);
-        qrImageView = v.findViewById(R.id.qr_iv);
 
 
         return v;
@@ -113,11 +115,8 @@ public class MotaXiaoZhiFragment extends Fragment implements INavigationClick
         } catch (Exception e)
         {
             e.printStackTrace();
-
-            // APPLog.e(TAG, "生成二维码数据出错," + e.getMessage());
         }
 
-        // APPLog.i(TAG, "val=" + val);
 
 
         qrBitmap = create2DCode(val, 140);
