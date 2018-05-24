@@ -49,8 +49,8 @@ public class ALiYunServer
     private long musicTotalTime = -1;
     private AliyunMusicInfo mCurrentAliyunMusicInfo;
 
-    private Handler delHandler ;
-    public   boolean mIsSensorStart = false;
+    private Handler delHandler;
+    public boolean mIsSensorStart = false;
 
 
     //music player state
@@ -153,18 +153,20 @@ public class ALiYunServer
 
                 if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
                 {
-                    delHandler.postDelayed(new Runnable() {
+                    delHandler.postDelayed(new Runnable()
+                    {
                         @Override
-                        public void run() {
+                        public void run()
+                        {
                             ALinkManager.getInstance().initMRecognizer();
-                                    if(!mIsSensorStart)
-                                    {
-                                        ALinkManager.getInstance().startSensory();
-                                        mIsSensorStart = true;
-                                    }
+                            if (!mIsSensorStart)
+                            {
+                                ALinkManager.getInstance().startSensory();
+                                mIsSensorStart = true;
+                            }
 
 
-                            Log.i(TAG,"小智 已经启动 ");
+                            Log.i(TAG, "小智 已经启动 ");
                         }
                     }, 1000);
                     mCurrentState = AliyunState.normal;
@@ -429,7 +431,6 @@ public class ALiYunServer
     }
 
 
-
     public void quickPlay(String uuid, String type, String itemId, String collectionId)
     {
         TransitoryRequest transitoryRequest = new TransitoryRequest();
@@ -496,7 +497,7 @@ public class ALiYunServer
 
     }
 
-    public void getPlayList(String auid, String uuid, String from, String size, String direct, String channelId, String collectionID,String itemId)
+    public void getPlayList(String auid, String uuid, String from, String size, String direct, String channelId, String collectionID, String itemId)
     {
         TransitoryRequest transitoryRequest = new TransitoryRequest();
         transitoryRequest.setMethod("mtop.openalink.pal.playlist.get");
@@ -523,9 +524,9 @@ public class ALiYunServer
 
                     Log.i(TAG, "getplaylist " + transitoryResponse.data.toString());
 
-                    List<AliyunMusicInfo> musicList = JSON.parseArray(transitoryResponse.data.toString(),AliyunMusicInfo.class);
+                    List<AliyunMusicInfo> musicList = JSON.parseArray(transitoryResponse.data.toString(), AliyunMusicInfo.class);
 
-                    Log.i(TAG,"size = "+musicList.size());
+                    Log.i(TAG, "size = " + musicList.size());
                     //get data
                     mainManager.setListAdepterAndAliyunMusicIfos(musicList);
                 }
@@ -539,6 +540,83 @@ public class ALiYunServer
         });
     }
 
+    public void getMusicCollectionDetailList(String uuid, String from, String size, String direct,
+                                              String channelId, String collectionID)
+    {
+        TransitoryRequest transitoryRequest = new TransitoryRequest();
+        transitoryRequest.setMethod("mtop.openalink.pal.channeldetaillist.get");
+        transitoryRequest.needToken = false;
+        transitoryRequest.putParam("uuid", uuid);
+        transitoryRequest.putParam("from", from);
+        transitoryRequest.putParam("size", size);
+        transitoryRequest.putParam("direct", direct);
+        transitoryRequest.putParam("channelId", channelId);
+        //音乐收藏
+        transitoryRequest.putParam("channelType", ""+3);
+        transitoryRequest.putParam("collectionId", collectionID);
+
+        ALinkBusinessEx biz = new ALinkBusinessEx();
+        biz.request(transitoryRequest, new ALinkBusinessEx.IListener()
+        {
+            @Override
+            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse)
+            {
+                Log.i(TAG, "getChannelList onSuccess");
+                if (transitoryResponse != null && transitoryResponse.data != null)
+                {
+                    Log.i(TAG, "getChannelList data: " + transitoryResponse.data.toString());
+                    JSONObject jsonObject = JSON.parseObject(transitoryResponse.data.toString());
+
+                    String datas = jsonObject.getString("datas");
+                    List<AliyunMusicInfo> musicList = JSON.parseArray(datas, AliyunMusicInfo.class);
+                    Log.i(TAG, "size = " + musicList.size());
+                    mainManager.setLovedAdepterAndAliyunMusicIfos(musicList);
+                }
+            }
+
+            @Override
+            public void onFailed(TransitoryRequest transitoryRequest, AError aError)
+            {
+                Log.i(TAG, "getChannelList onFailed");
+            }
+        });
+    }
+
+    //may be is here
+    public void getPlayDetailList(String uuid, String from, String size,
+                                              String direct, String collectionId) {
+        TransitoryRequest transitoryRequest = new TransitoryRequest();
+        transitoryRequest.setMethod("mtop.openalink.pal.collectiondetaillist.get");
+        transitoryRequest.needToken = false;
+        transitoryRequest.putParam("uuid", uuid);
+        transitoryRequest.putParam("from", from);
+        transitoryRequest.putParam("size", size);
+        transitoryRequest.putParam("direct", direct);
+        transitoryRequest.putParam("collectionId", collectionId);
+        transitoryRequest.putParam("version", "1.0");
+
+        ALinkBusinessEx biz = new ALinkBusinessEx();
+        biz.request(transitoryRequest, new ALinkBusinessEx.IListener() {
+            @Override
+            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse) {
+                Log.i(TAG, "getCollectionByTag onSuccess");
+                if (transitoryResponse != null && transitoryResponse.data != null) {
+                    Log.i(TAG, "getCollectionByTag data: "+ transitoryResponse.data.toString());
+
+                    JSONObject jsonObject = JSON.parseObject(transitoryResponse.data.toString());
+                    String datas = jsonObject.getString("datas");
+                    List<AliyunMusicInfo> musicList = JSON.parseArray(datas, AliyunMusicInfo.class);
+                    Log.i(TAG, "size = " + musicList.size());
+                    mainManager.setListAdepterAndAliyunMusicIfos(musicList);
+                }
+            }
+
+            @Override
+            public void onFailed(TransitoryRequest transitoryRequest, AError aError) {
+                Log.i(TAG, "getCollectionByTag onFailed");
+            }
+        });
+    }
 
     public enum AliyunState
     {

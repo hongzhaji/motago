@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -165,7 +166,7 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             {
                 if (musicInfo != null)
                 {
-                    musicHelp.showPlayList(AlinkDevice.getInstance().getDeviceUUID(), "0", "10", "1", "" + musicInfo.getChannelId(), "" + musicInfo.getItemType(), "" + musicInfo.getCollectionId(),""+musicInfo.getId());
+                    musicHelp.showPlayList(AlinkDevice.getInstance().getDeviceUUID(), "0", "10", "1", "" + musicInfo.getChannelId(), "" + musicInfo.getItemType(), "" + musicInfo.getCollectionId(), "" + musicInfo.getId());
                 }
 
             }
@@ -197,6 +198,14 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
         currentMusicTime = v.findViewById(R.id.music_current_time);
         musicLoved = v.findViewById(R.id.music_loved_cb);
         musicSeekBar = v.findViewById(R.id.music_seek);
+        musicSeekBar.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return true;
+            }
+        });
         musicLoved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
@@ -223,8 +232,8 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
         musicAtist.setText(musicInfo.getArtist());
         musicName.setText(musicInfo.getName());
         playButton.setBackgroundResource(R.drawable.music_play_sel_play);
-        Log.i("tyty","-- love = "+musicInfo.isLoved());
-     musicLoved.setChecked(musicInfo.isLoved());
+        Log.i("tyty", "-- love = " + musicInfo.isLoved());
+        musicLoved.setChecked(musicInfo.isLoved());
         totalMusicTime.setText(musicInfo.getDuration());
     }
 
@@ -287,7 +296,7 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
 
         void aliyunSetPlayMode(int mode);
 
-        void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID,String itemId);
+        void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID, String itemId);
 
         boolean isPlaying();
 

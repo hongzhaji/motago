@@ -2,6 +2,7 @@ package com.realm.motago;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,7 @@ public class MotaMainActivity extends AppCompatActivity
 {
 
     private SupperFragmentManager manager;
-    private  Toolbar toolbar;
+    private Toolbar toolbar;
 
 
     @Override
@@ -42,7 +43,6 @@ public class MotaMainActivity extends AppCompatActivity
         toolbar.setTitle("");
 
 
-
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener()
         {
@@ -52,9 +52,12 @@ public class MotaMainActivity extends AppCompatActivity
 
                 if (!manager.backToLastFragment())
                 {
-                    finish();
-                }
-                else
+                    Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
+                    mHomeIntent.addCategory(Intent.CATEGORY_HOME);
+                    mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                    startActivity(mHomeIntent);
+                } else
                 {
                     toolbar.setTitle("");
                 }

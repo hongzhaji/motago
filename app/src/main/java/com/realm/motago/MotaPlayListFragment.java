@@ -44,8 +44,8 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
 
         viewPager = v.findViewById(R.id.list_music_pageview);
 
-        //adapter = new PlayListAdapter(getContext(),);
-        //viewPager.setAdapter(adapter);
+        adapter = new PlayListAdapter(getContext());
+        viewPager.setAdapter(adapter);
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
@@ -94,10 +94,15 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
 
 
     public void setMusiclistAdapter(List<AliyunMusicInfo> infos)
+{
+    adapter.setPlayListAdapter(infos);
+}
+
+    public void setLovedlistAdapter(List<AliyunMusicInfo> infos)
     {
-        adapter = new PlayListAdapter(getContext(),infos);
-        viewPager.setAdapter(adapter);
+        adapter.setLovedListAdapter(infos);
     }
+
 
     public void setHelp(IMusicPlayHelp help)
     {

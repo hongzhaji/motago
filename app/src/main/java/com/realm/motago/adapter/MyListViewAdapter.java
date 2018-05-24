@@ -13,6 +13,7 @@ import com.realm.motago.R;
 import com.realm.motago.element.AliyunMusicInfo;
 import com.realm.motago.element.MyMusicInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,10 +26,10 @@ public class MyListViewAdapter extends BaseAdapter
     private Context context;
     private MotaPlayListFragment.IMusicPlayHelp help;
 
-    public MyListViewAdapter(List<AliyunMusicInfo> myMusicInfos, Context context)
+    public MyListViewAdapter( Context context)
     {
-        this.myMusicInfos = myMusicInfos;
         this.context = context;
+        myMusicInfos = new ArrayList<AliyunMusicInfo>();
     }
 
     @Override
@@ -93,6 +94,11 @@ public class MyListViewAdapter extends BaseAdapter
     public void setHelp(MotaPlayListFragment.IMusicPlayHelp help)
     {
         this.help = help;
+    }
+
+    public void setMyMusicInfos(List<AliyunMusicInfo> myMusicInfos)
+    {
+        this.myMusicInfos = myMusicInfos;
     }
 
     class ViewHolder

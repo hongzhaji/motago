@@ -25,18 +25,18 @@ public class PlayListAdapter extends PagerAdapter
     private MyListViewAdapter lovedListAdapter;
 
 
-    public PlayListAdapter(Context context, List<AliyunMusicInfo> infos)
+    public PlayListAdapter(Context context)
     {
         mViews = new ArrayList<ListView>();
 
 
         ListView mPlayListView = new ListView(context);
         mPlayListView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        playListAdapter = new MyListViewAdapter(infos, context);
+        playListAdapter = new MyListViewAdapter( context);
         mPlayListView.setAdapter(playListAdapter);
         ListView mPlayLovedView = new ListView(context);
         mPlayLovedView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        lovedListAdapter = new MyListViewAdapter(infos, context);
+        lovedListAdapter = new MyListViewAdapter( context);
         mPlayLovedView.setAdapter(lovedListAdapter);
         mViews.add(mPlayListView);
         mViews.add(mPlayLovedView);
@@ -45,6 +45,8 @@ public class PlayListAdapter extends PagerAdapter
 
 
     }
+
+
 
     @Override
     public int getCount()
@@ -82,5 +84,15 @@ public class PlayListAdapter extends PagerAdapter
     {
         lovedListAdapter.setHelp(help);
         playListAdapter.setHelp(help);
+    }
+
+    public void  setPlayListAdapter(List<AliyunMusicInfo> views)
+    {
+        playListAdapter.setMyMusicInfos(views);
+    }
+
+    public void  setLovedListAdapter(List<AliyunMusicInfo> views)
+    {
+        lovedListAdapter.setMyMusicInfos(views);
     }
 }
