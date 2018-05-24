@@ -72,6 +72,10 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                     translateToMotagoListFragment();
 
                     return;
+                }else if(msg.what == 4)
+                {
+                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setLovedlistAdapter((List<AliyunMusicInfo>)msg.obj);
+                    return;
                 }
 
 
@@ -139,7 +143,12 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     }
     public  void  setLovedAdepterAndAliyunMusicIfos(List<AliyunMusicInfo> infos)
     {
-        ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setMusiclistAdapter(infos);
+
+        Message msg = mUIHandler.obtainMessage();
+        msg.arg1 = MOTA_FRAGMENT_MUSIC;
+        msg.obj = infos;
+        msg.what = 4;
+        msg.sendToTarget();
     }
 
 
@@ -317,8 +326,9 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID,String itemId)
     {
       //mainServer.getPlayList("1", AlinkDevice.getInstance().getDeviceUUID(),from,size,direct,channelId,collectionID,itemId);
-        mainServer.getPlayDetailList(uuid,from,size,direct,collectionID);
+
         mainServer.getMusicCollectionDetailList(uuid,from,size,direct,channelId,collectionID);
+        mainServer.getPlayDetailList(uuid,from,size,direct,collectionID);
 
     }
 

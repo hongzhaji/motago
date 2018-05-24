@@ -166,7 +166,8 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             {
                 if (musicInfo != null)
                 {
-                    musicHelp.showPlayList(AlinkDevice.getInstance().getDeviceUUID(), "0", "10", "1", "" + musicInfo.getChannelId(), "" + musicInfo.getItemType(), "" + musicInfo.getCollectionId(), "" + musicInfo.getId());
+                    //max = 20
+                    musicHelp.showPlayList(AlinkDevice.getInstance().getDeviceUUID(), "0", "20", "1", "" + musicInfo.getChannelId(), "" + musicInfo.getItemType(), "" + musicInfo.getCollectionId(), "" + musicInfo.getId());
                 }
 
             }
@@ -198,14 +199,14 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
         currentMusicTime = v.findViewById(R.id.music_current_time);
         musicLoved = v.findViewById(R.id.music_loved_cb);
         musicSeekBar = v.findViewById(R.id.music_seek);
-        musicSeekBar.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
+//        musicSeekBar.setOnTouchListener(new View.OnTouchListener()
+//        {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event)
+//            {
+//                return true;
+//            }
+//        });
         musicLoved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override

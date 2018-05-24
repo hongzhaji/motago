@@ -561,7 +561,7 @@ public class ALiYunServer
             @Override
             public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse)
             {
-                Log.i(TAG, "getChannelList onSuccess");
+                Log.i(TAG, "getChannelList ----------------   onSuccess");
                 if (transitoryResponse != null && transitoryResponse.data != null)
                 {
                     Log.i(TAG, "getChannelList data: " + transitoryResponse.data.toString());
@@ -599,7 +599,7 @@ public class ALiYunServer
         biz.request(transitoryRequest, new ALinkBusinessEx.IListener() {
             @Override
             public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse) {
-                Log.i(TAG, "getCollectionByTag onSuccess");
+                Log.i(TAG, "getCollectionByTag ------------------ onSuccess");
                 if (transitoryResponse != null && transitoryResponse.data != null) {
                     Log.i(TAG, "getCollectionByTag data: "+ transitoryResponse.data.toString());
 

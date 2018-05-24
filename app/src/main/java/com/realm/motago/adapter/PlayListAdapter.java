@@ -3,6 +3,7 @@ package com.realm.motago.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -94,5 +95,6 @@ public class PlayListAdapter extends PagerAdapter
     public void  setLovedListAdapter(List<AliyunMusicInfo> views)
     {
         lovedListAdapter.setMyMusicInfos(views);
+        Log.i("tyty","setLovedListAdapter");
     }
 }
