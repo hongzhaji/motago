@@ -7,12 +7,14 @@
               android:layout_marginBottom="38dp"
 >
     <RelativeLayout android:layout_width="match_parent" android:layout_height="30dp"
-                    android:background="@android:color/white"
+                    android:background="@mipmap/music_channel_backgrand"
                     android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
     >
         <CheckBox android:layout_width="wrap_content" android:layout_height="match_parent"
         android:text="正在播放"
-                  android:background="@null"
+                  android:background="@mipmap/music_channel_selected"
                   android:button="@null"
                   android:id="@+id/mota_music_list_play"
                   android:layout_marginLeft="20dp"

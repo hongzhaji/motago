@@ -37,6 +37,11 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
     private TextView currentMusicTime;
     private SeekBar musicSeekBar;
     private Handler mhadler;
+    private  static final int CYCLE_MODE= 0;
+    private  static final int RANDOM_MODE= 1;
+    private  static final int SINGLE_MODE= 2;
+    private int currentMode = 0;
+
 
 
     public MotaMusicFragment()
@@ -188,7 +193,21 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             @Override
             public void onClick(View v)
             {
-                musicHelp.aliyunSetPlayMode(0);
+                if(currentMode == CYCLE_MODE)
+                {
+                    currentMode = RANDOM_MODE;
+                    v.setBackgroundResource(R.drawable.music_play_sel_random);
+                }else if(currentMode == RANDOM_MODE)
+                {
+                    currentMode = SINGLE_MODE;
+                    v.setBackgroundResource(R.drawable.music_play_sel_single);
+                }
+                else if(currentMode == SINGLE_MODE)
+                {
+                    currentMode = CYCLE_MODE;
+                    v.setBackgroundResource(R.drawable.music_play_sel_cycle);
+                }
+                musicHelp.aliyunSetPlayMode(currentMode);
             }
         });
 
@@ -199,14 +218,14 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
         currentMusicTime = v.findViewById(R.id.music_current_time);
         musicLoved = v.findViewById(R.id.music_loved_cb);
         musicSeekBar = v.findViewById(R.id.music_seek);
-//        musicSeekBar.setOnTouchListener(new View.OnTouchListener()
-//        {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event)
-//            {
-//                return true;
-//            }
-//        });
+        musicSeekBar.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                return true;
+            }
+        });
         musicLoved.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override

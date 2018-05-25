@@ -132,12 +132,18 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
         {
             viewPager.setCurrentItem(1);
             lovedCB.setEnabled(false);
+
             playCB.setEnabled(true);
+            playCB.setBackground(null);
+            lovedCB.setBackgroundResource(R.mipmap.music_channel_selected);
         }else  if(buttonView.getId() == R.id.mota_music_list_play && isChecked)
         {
             viewPager.setCurrentItem(0);
             lovedCB.setEnabled(true );
             playCB.setEnabled(false);
+            lovedCB .setBackground(null);
+            playCB.setBackgroundResource(R.mipmap.music_channel_selected);
+
         }
     }
 

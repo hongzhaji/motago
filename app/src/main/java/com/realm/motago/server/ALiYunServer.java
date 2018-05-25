@@ -199,7 +199,22 @@ public class ALiYunServer
                     stopAlinkRec();
                 }else if(status == TYPE_REC_STATUS_VOLUME)
                 {
-                    mainManager.changeVioceLevel(extra);
+                    //0 -100  level [0 1 2 3]
+                    int level = 0;
+                    if(extra < 25)
+                    {
+                        level = 0;
+                    }else if(extra < 50)
+                    {
+                        level = 1;
+                    }else if (extra < 75)
+                    {
+                        level = 2;
+                    }else
+                    {
+                        level = 3;
+                    }
+                    mainManager.changeVioceLevel(level);
                 }
             }
 
