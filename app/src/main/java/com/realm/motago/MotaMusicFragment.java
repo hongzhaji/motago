@@ -241,6 +241,11 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
     //alone
     private void invaluedateMusicPlayStateUI()
     {
+        if(musicHelp == null)
+        {
+            Log.i("tyty","  musicHelp  === null" );
+            return;
+        }
         if (musicHelp.isPlaying())
         {
             playButton.setBackgroundResource(R.drawable.music_play_sel_play);

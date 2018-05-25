@@ -47,7 +47,7 @@ public class ALiYunServer
 
     private boolean isAliyunMusicMediaPlaying;
     private long musicTotalTime = -1;
-    private AliyunMusicInfo mCurrentAliyunMusicInfo;
+
 
     private Handler delHandler;
     public boolean mIsSensorStart = false;
@@ -69,6 +69,14 @@ public class ALiYunServer
     public static final int TYPE_PAL_STATUS_MUSIC_PAUSE = 110;
     //开始事件
     public static final int TYPE_PAL_STATUS_MUSIC_START = 111;
+
+
+    //开始语音识别
+    public static final int TYPE_REC_STATUS_RECOGNIZE_START = 301;
+    //结束语音识别
+    public static final int TYPE_REC_STATUS_RECOGNIZE_STOP = 302;
+    //返回音量大小
+    public static final int TYPE_REC_STATUS_VOLUME = 303;
 
 
     public ALiYunServer(Context context, SupperFragmentManager mainManager)
@@ -187,8 +195,11 @@ public class ALiYunServer
                 {
                     Log.d(TAG, " not recognize");
                     mainManager.addMessage("声音太小，听不清楚", Msg.TYPE_RECEIVE);
-                    mainManager.switchAliyunState(false);
+
                     stopAlinkRec();
+                }else if(status == TYPE_REC_STATUS_VOLUME)
+                {
+                    mainManager.changeVioceLevel(extra);
                 }
             }
 
@@ -232,7 +243,7 @@ public class ALiYunServer
                 {
                     try
                     {
-                        mCurrentAliyunMusicInfo = JSON.parseObject(info, AliyunMusicInfo.class);
+                       AliyunMusicInfo mCurrentAliyunMusicInfo = JSON.parseObject(info, AliyunMusicInfo.class);
                         if (mCurrentAliyunMusicInfo != null)
                         {
                             Log.i(TAG, mCurrentAliyunMusicInfo.toString());
@@ -262,7 +273,11 @@ public class ALiYunServer
             {
 
             }
+
         });
+
+
+
     }
 
     public AliyunState getmCurrentState()
@@ -540,6 +555,55 @@ public class ALiYunServer
         });
     }
 
+
+    public void getChannelList(String uuid) {
+        TransitoryRequest transitoryRequest = new TransitoryRequest();
+        transitoryRequest.setMethod("mtop.openalink.pal.douglaschannellist.get");
+        transitoryRequest.needToken = false;
+        transitoryRequest.putParam("uuid", uuid);
+
+        ALinkBusinessEx biz = new ALinkBusinessEx();
+        biz.request(transitoryRequest, new ALinkBusinessEx.IListener() {
+            @Override
+            public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse) {
+                Log.i(TAG, "getChannelList onSuccess");
+                try {
+                    String channelData = (String)transitoryResponse.data;
+                    Log.i(TAG, "getChannelList channelData: "+channelData);
+                    JSONObject channelDataObject = JSON.parseObject(channelData);
+                    JSONArray channelList = channelDataObject.getJSONArray("data");
+                   String mRecentChannelId = channelDataObject.getString("recentChannelId");
+
+                    if (channelList != null && channelList.size() > 0) {
+
+                        for (int i = 0; i < channelList.size(); i++) {
+                            JSONObject channelItem = (JSONObject) channelList.get(i);
+
+                            MusicChannel musicChannel = new MusicChannel();
+                            musicChannel.auid = channelItem.getString("auid");
+                            musicChannel.channelId = channelItem.getString("id");
+                            musicChannel.channelLogo = channelItem.getString("logo");
+                            musicChannel.channelName = channelItem.getString("name");
+                            musicChannel.channelType= channelItem.getString("channelType");
+                            musicChannel.detailEditable = channelItem.getString("detailEditable");
+                            musicChannel.removable = channelItem.getString("removable");
+                            musicChannel.seqNum = channelItem.getString("seqNum");
+                            musicChannel.supportCache = channelItem.getString("supportCache");
+                            Log.i("tyty",musicChannel.toString());
+                        }
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onFailed(TransitoryRequest transitoryRequest, AError aError) {
+                Log.i(TAG, "getChannelList onFailed");
+            }
+        });
+    }
+
     public void getMusicCollectionDetailList(String uuid, String from, String size, String direct,
                                               String channelId, String collectionID)
     {
@@ -550,10 +614,11 @@ public class ALiYunServer
         transitoryRequest.putParam("from", from);
         transitoryRequest.putParam("size", size);
         transitoryRequest.putParam("direct", direct);
-        transitoryRequest.putParam("channelId", channelId);
+        transitoryRequest.putParam("channelId", "629328");
         //音乐收藏
         transitoryRequest.putParam("channelType", ""+3);
-        transitoryRequest.putParam("collectionId", collectionID);
+        Log.i("tyty"," id = "+collectionID);
+        transitoryRequest.putParam("collectionId","0" );
 
         ALinkBusinessEx biz = new ALinkBusinessEx();
         biz.request(transitoryRequest, new ALinkBusinessEx.IListener()

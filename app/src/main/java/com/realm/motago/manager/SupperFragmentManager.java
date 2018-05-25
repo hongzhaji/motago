@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.aliyun.alink.device.AlinkDevice;
@@ -39,10 +40,13 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     private Fragment[] kindFragment;
 
+    private AliyunMusicInfo mCurrentAliyunMusicInfo;
 
     // User interaction
     private Button mVoiceInput;
     private Button getmVoiceCancel;
+    private  ImageView voiceLevelView;
+
     private ViewGroup mBottomView;
     private int mCurrentFragmentIndex;
     private ALiYunServer mainServer;
@@ -56,6 +60,10 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         {
             super.handleMessage(msg);
 
+
+
+
+
             if (msg.arg1 == MOTA_FRAGMENT_MUSIC)
             {
                 //set current time for music .
@@ -64,20 +72,19 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                     int time = msg.arg2;
                     ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicCurrentTime("" + time, (int) msg.obj);
                     return;
-                }else if(msg.what == 3)
+                } else if (msg.what == 3)
                 {
 
-                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setMusiclistAdapter((List<AliyunMusicInfo>)msg.obj);
+                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setMusiclistAdapter((List<AliyunMusicInfo>) msg.obj,mCurrentAliyunMusicInfo);
                     ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setHelp(SupperFragmentManager.this);
                     translateToMotagoListFragment();
 
                     return;
-                }else if(msg.what == 4)
+                } else if (msg.what == 4)
                 {
-                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setLovedlistAdapter((List<AliyunMusicInfo>)msg.obj);
+                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setLovedlistAdapter((List<AliyunMusicInfo>) msg.obj);
                     return;
                 }
-
 
 
                 //set music info and show music fragment
@@ -87,10 +94,15 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                     translateToMotagoMusicFragment();
                 }
             }
+
             if (msg.what == 1)
             {
                 switchAliyunState(false);
+            }else if(msg.what == 2)
+            {
+                setVoiceLevel((int)msg.obj);
             }
+
         }
     };
 
@@ -125,6 +137,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     public void setMusicInfo(AliyunMusicInfo musicInfo)
     {
+        mCurrentAliyunMusicInfo = musicInfo;
+
         Message msg = mUIHandler.obtainMessage();
         msg.arg1 = MOTA_FRAGMENT_MUSIC;
         msg.obj = musicInfo;
@@ -133,7 +147,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     }
 
     //need translate
-    public void  setListAdepterAndAliyunMusicIfos(List<AliyunMusicInfo> infos)
+    public void setListAdepterAndAliyunMusicIfos(List<AliyunMusicInfo> infos)
     {
         Message msg = mUIHandler.obtainMessage();
         msg.arg1 = MOTA_FRAGMENT_MUSIC;
@@ -141,7 +155,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         msg.what = 3;
         msg.sendToTarget();
     }
-    public  void  setLovedAdepterAndAliyunMusicIfos(List<AliyunMusicInfo> infos)
+
+    public void setLovedAdepterAndAliyunMusicIfos(List<AliyunMusicInfo> infos)
     {
 
         Message msg = mUIHandler.obtainMessage();
@@ -183,8 +198,13 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                 mainServer.pauseMusic();
             }
             return true;
-
-
+        } else if (mCurrentFragmentIndex == MOTA_FRAGMENT_LIST && ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).onNavigationCLick())
+        {
+            FragmentTransaction transaction = motaManager.beginTransaction();
+            transaction.hide(kindFragment[MOTA_FRAGMENT_LIST]);
+            transaction.show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
+            mCurrentFragmentIndex = MOTA_FRAGMENT_MUSIC;
+            return true;
         }
 
         return false;
@@ -213,19 +233,51 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         {
             mBottomView.setVisibility(View.GONE);
             mVoiceInput.setVisibility(View.VISIBLE);
+            //default = 0 ---> not voice
+            changeVioceLevel(0);
         }
     }
 
+    public  void changeVioceLevel(int level)
+    {
+        Message message = mUIHandler.obtainMessage();
+        message.what = 2;
+        message.obj = level;
+        message.sendToTarget();
 
+    }
 
     public void finish()
     {
         mainServer.stopALinkServer();
-        if(mainServer.mIsSensorStart)
+        if (mainServer.mIsSensorStart)
         {
             mainServer.stopSensory();
         }
 
+    }
+
+    private  void setVoiceLevel(int level)
+    {
+
+        Log.i("tyty","voice level = "+level);
+        switch (level)
+        {
+            case 0:
+                voiceLevelView.setImageResource(R.mipmap.voice_level_0);
+            break;
+            case 1:
+                voiceLevelView.setImageResource(R.mipmap.voice_level_1);
+                break;
+            case 2:
+                voiceLevelView.setImageResource(R.mipmap.voice_level_2);
+                break;
+            case 3:
+                voiceLevelView.setImageResource(R.mipmap.voice_level_3);
+                break;
+           default:
+                break;
+        }
     }
 
     private void translateToMotagoMusicFragment()
@@ -237,7 +289,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         switchAliyunState(false);
     }
 
-    private  void  translateToMotagoListFragment()
+    private void translateToMotagoListFragment()
     {
         FragmentTransaction transaction = motaManager.beginTransaction();
         transaction.hide(kindFragment[mCurrentFragmentIndex]);
@@ -289,6 +341,9 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                 mainServer.stopAlinkRec();
             }
         });
+
+         voiceLevelView = mRootView.findViewById(R.id.imageView_recording_level);
+
         mBottomView = mRootView.findViewById(R.id.bottom_recording);
     }
 
@@ -320,15 +375,16 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public void aliyunSetPlayMode(int mode)
     {
         mainServer.switchPlaymode();
+        //  mainServer.getChannelList(AlinkDevice.getInstance().getDeviceUUID());
     }
 
     @Override
-    public void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID,String itemId)
+    public void showPlayList(String uuid, String from, String size, String direct, String channelId, String channelType, String collectionID, String itemId)
     {
-      //mainServer.getPlayList("1", AlinkDevice.getInstance().getDeviceUUID(),from,size,direct,channelId,collectionID,itemId);
+        //mainServer.getPlayList("1", AlinkDevice.getInstance().getDeviceUUID(),from,size,direct,channelId,collectionID,itemId);
 
-        mainServer.getMusicCollectionDetailList(uuid,from,size,direct,channelId,collectionID);
-        mainServer.getPlayDetailList(uuid,from,size,direct,collectionID);
+        mainServer.getMusicCollectionDetailList(uuid, from, size, direct, channelId, collectionID);
+        mainServer.getPlayDetailList(uuid, from, size, direct, collectionID);
 
     }
 
@@ -341,7 +397,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     @Override
     public void aliyunLoveMusic(int loveid)
     {
-        mainServer.loveMusic(""+loveid);
+        mainServer.loveMusic("" + loveid);
     }
 
     @Override
@@ -368,6 +424,12 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     {
         //cancel fover
         mainServer.cancelFavorite(uuid, itemId, channelId);
+    }
+
+    @Override
+    public AliyunMusicInfo getCurrentMusicInfo()
+    {
+        return mCurrentAliyunMusicInfo;
     }
 
 

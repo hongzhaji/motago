@@ -12,6 +12,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import com.realm.motago.adapter.PlayListAdapter;
 import com.realm.motago.element.AliyunMusicInfo;
+import com.realm.motago.manager.INavigationClick;
+import com.realm.motago.manager.IXiaoZhiClick;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ import java.util.List;
  * Created by Skyyao on 2018\5\15 0015.
  */
 
-public class MotaPlayListFragment extends Fragment implements CompoundButton.OnCheckedChangeListener
+public class MotaPlayListFragment extends Fragment implements CompoundButton.OnCheckedChangeListener ,INavigationClick
 {
     private ViewPager viewPager;
     private PlayListAdapter adapter;
@@ -93,14 +95,27 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
 
 
 
-    public void setMusiclistAdapter(List<AliyunMusicInfo> infos)
+    public void setMusiclistAdapter(List<AliyunMusicInfo> infos,AliyunMusicInfo cur)
 {
     adapter.setPlayListAdapter(infos);
+    // need invalue.use not used param playtime
+    for (AliyunMusicInfo info : infos)
+    {
+        //json used cach. need clear
+        info.setPlayTime(0);
+        if(info.getId() == cur.getId())
+        {
+            info.setPlayTime(1);
+            Log.i("tyty","cur music name = "+cur.getName());
+        }
+    }
+
 }
 
     public void setLovedlistAdapter(List<AliyunMusicInfo> infos)
     {
         adapter.setLovedListAdapter(infos);
+
     }
 
 
@@ -126,11 +141,19 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
         }
     }
 
+    @Override
+    public boolean onNavigationCLick()
+    {
+        return true;
+    }
+
     public interface IMusicPlayHelp
     {
          void quickPlay(String uuid,String type, String itemId, String collectionId);
 
          void cancelFavorite(String uuid, String itemId, String channelId);
+
+         AliyunMusicInfo getCurrentMusicInfo();
 
     }
 }

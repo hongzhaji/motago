@@ -1,6 +1,7 @@
 package com.realm.motago.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,6 +88,14 @@ public class MyListViewAdapter extends BaseAdapter
                 help.quickPlay(AlinkDevice.getInstance().getDeviceUUID(), ""+info.getItemType(), ""+info.getId(), ""+info.getCollectionId());
             }
         });
+        if(myMusicInfos.get(position).getPlayTime() != 0)
+        {
+            convertView.setBackgroundColor(Color.BLUE);
+        }
+        else
+        {
+            convertView.setBackgroundColor(Color.TRANSPARENT);
+        }
 
         return convertView;
     }
@@ -96,9 +105,15 @@ public class MyListViewAdapter extends BaseAdapter
         this.help = help;
     }
 
-    public void setMyMusicInfos(List<AliyunMusicInfo> myMusicInfos)
+    public void setMyMusicInfos(List<AliyunMusicInfo> infos)
     {
-        this.myMusicInfos = myMusicInfos;
+        myMusicInfos.clear();
+        for (int i =0; i< infos.size();i++)
+        {
+            myMusicInfos.add(infos.get(i));
+        }
+       notifyDataSetChanged();
+
     }
 
     class ViewHolder

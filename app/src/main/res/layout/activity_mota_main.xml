@@ -23,9 +23,9 @@
         </View>
 
         <ImageView
-                android:src="@mipmap/voice_recording"
+                android:src="@mipmap/voice_level_0"
                 android:layout_width="48dp"
-                android:layout_height="9dp" android:id="@+id/imageView_recording" android:layout_marginTop="8dp"
+                android:layout_height="9dp" android:id="@+id/imageView_recording_level" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                 app:layout_constraintHorizontal_bias="0.42"/>
@@ -37,7 +37,6 @@
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                 app:layout_constraintHorizontal_bias="0.58"
                 android:background="@mipmap/cancel_record"
-
 
         />
 

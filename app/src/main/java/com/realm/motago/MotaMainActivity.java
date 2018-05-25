@@ -71,6 +71,10 @@ public class MotaMainActivity extends AppCompatActivity
 //        String str = "{\"status_code\":\"1111\",\"biz_code\":\"aaa\",\"asr_ret\":\"ccccc\"}";
 //        TestJson aaJson = JSON.parseObject(str, TestJson.class);
 //        Log.i("tyty", aaJson.toString());
+
+
+
+
     }
 
     @Override

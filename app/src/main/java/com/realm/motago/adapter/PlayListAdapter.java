@@ -90,11 +90,13 @@ public class PlayListAdapter extends PagerAdapter
     public void  setPlayListAdapter(List<AliyunMusicInfo> views)
     {
         playListAdapter.setMyMusicInfos(views);
+
     }
 
     public void  setLovedListAdapter(List<AliyunMusicInfo> views)
     {
         lovedListAdapter.setMyMusicInfos(views);
         Log.i("tyty","setLovedListAdapter");
+
     }
 }
