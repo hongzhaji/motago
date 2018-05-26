@@ -89,7 +89,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
                 //set music info and show music fragment
                 ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).setMusicInfo((AliyunMusicInfo) msg.obj);
-                if (mCurrentFragmentIndex != MOTA_FRAGMENT_MUSIC)
+                if (mCurrentFragmentIndex != MOTA_FRAGMENT_MUSIC && mainServer.isTopApp())
                 {
                     translateToMotagoMusicFragment();
                 }
@@ -121,8 +121,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
 
         switchAliyunState(false);
-        mainServer.startALinkServer();
-
+       // mainServer.startALinkServer();
+        mainServer.startALinkServerNew();
     }
 
 
@@ -249,12 +249,13 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     public void finish()
     {
-        mainServer.stopALinkServer();
-        if (mainServer.mIsSensorStart)
-        {
-            mainServer.stopSensory();
-        }
-
+//        mainServer.stopALinkServer();
+//        if (mainServer.mIsSensorStart)
+//        {
+//            mainServer.stopSensory();
+//        }
+        MyApplication application = (MyApplication) mContext.getApplicationContext();
+        application.unBindeService();
     }
 
     private  void setVoiceLevel(int level)

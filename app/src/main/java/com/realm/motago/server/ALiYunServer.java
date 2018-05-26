@@ -1,10 +1,14 @@
 package com.realm.motago.server;
 
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -17,6 +21,7 @@ import com.aliyun.alink.sdk.net.anet.api.AError;
 import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryRequest;
 import com.aliyun.alink.sdk.net.anet.api.transitorynet.TransitoryResponse;
 import com.realm.motago.HelpUtil;
+import com.realm.motago.MyApplication;
 import com.realm.motago.element.*;
 import com.realm.motago.manager.SupperFragmentManager;
 
@@ -49,8 +54,8 @@ public class ALiYunServer
     private long musicTotalTime = -1;
 
 
-    private Handler delHandler;
-    public boolean mIsSensorStart = false;
+
+
 
 
     //music player state
@@ -83,7 +88,7 @@ public class ALiYunServer
     {
         this.mContext = context;
         this.mainManager = mainManager;
-        delHandler = new Handler();
+
         isAliyunMusicMediaPlaying = false;
     }
 
@@ -112,13 +117,9 @@ public class ALiYunServer
                 // Recognize
                 if (status == 200)
                 {
-                    Log.d(TAG, "json start");
-
-
                     try
                     {
                         AliyunResponseData data = JSON.parseObject(result, AliyunResponseData.class);
-
                         if (data != null)
                         {
                             Log.i(TAG, "parse value = " + data.toString());
@@ -158,25 +159,8 @@ public class ALiYunServer
             {
                 Log.i(TAG, "onAlinkStatus :" + status);
 
-
                 if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
                 {
-                    delHandler.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            ALinkManager.getInstance().initMRecognizer();
-                            if (!mIsSensorStart)
-                            {
-                                ALinkManager.getInstance().startSensory();
-                                mIsSensorStart = true;
-                            }
-
-
-                            Log.i(TAG, "小智 已经启动 ");
-                        }
-                    }, 1000);
                     mCurrentState = AliyunState.normal;
                 }
 
@@ -254,6 +238,7 @@ public class ALiYunServer
             public void onMusicInfo(int resCode, String info)
             {
                 Log.i(TAG, "onMusicInfo :" + resCode + " info: " + info);
+                isTopApp();
                 if (resCode == 1000)
                 {
                     try
@@ -333,6 +318,190 @@ public class ALiYunServer
         Log.i(TAG, HelpUtil.getAndroidOsSN() + " ---------" + HelpUtil.getMacAddress() + "  ----");
 
 
+    }
+
+    public  void startALinkServerNew()
+    {
+
+        mCurrentState = AliyunState.normal;
+        AliyunBackstageServer server =  ((MyApplication)mContext.getApplicationContext()).getaLiYunServer();
+        if(server == null )
+        {
+            Log.e("tyty","aliyun service not install err!");
+            Toast.makeText(mContext,"阿里服务没有开启，请重启设备！",Toast.LENGTH_LONG).show();
+            ((Activity)mContext).finish();
+            return;
+        }
+        server .setImp(
+        new AliyunBackstageServer.IGaoShiQingimp()
+        {
+
+
+            @Override
+            public void onRecognizeResult(int status, String result)
+            {
+                Log.d(TAG, "status : " + status + "  result: " + result);
+                // Recognize
+                if (status == 200)
+                {
+                    try
+                    {
+                        AliyunResponseData data = JSON.parseObject(result, AliyunResponseData.class);
+                        if (data != null)
+                        {
+                            Log.i(TAG, "parse value = " + data.toString());
+                            // ask msg
+                            mainManager.addMessage(data.getAskRet(), Msg.TYPE_SEND);
+
+                            // receive msg
+                            List<AliyunResponseData.AliyunServiceData.AliyunTTsData> tTsData = data.getData().getTtsUrl();
+                            if (tTsData.size() > 0)
+                            {
+                                String ttsText = tTsData.get(0).getTts_text();
+                                if (ttsText != null && !ttsText.trim().equals("null"))
+                                {
+                                    mainManager.addMessage(ttsText, Msg.TYPE_RECEIVE);
+                                }
+                            }
+                        } else
+                        {
+                            Log.d(TAG, "parse value err");
+                        }
+                    } catch (Exception e)
+                    {
+                        Log.e(TAG, e.toString());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onAsrStreamingResult(int status, String result)
+            {
+                Log.i(TAG, "status : " + status + " onAsrStreamingResult :" + result);
+            }
+
+            @Override
+            public void onAlinkStatus(int status)
+            {
+                Log.i(TAG, "onAlinkStatus :" + status);
+
+                if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
+                {
+                    mCurrentState = AliyunState.normal;
+                }
+
+                if (PALConstant.TYPE_PAL_STATUS_START_END == status)
+                {
+                    mCurrentState = AliyunState.normal;
+                }
+            }
+
+            @Override
+            public void onRecEvent(int status, int extra)
+            {
+                //if have words , extra big than zero
+                Log.i(TAG, "onRecEvent :" + status + " extra: " + extra);
+                if (status == PALConstant.TYPE_REC_NOTHING)
+                {
+                    Log.d(TAG, " not recognize");
+                    mainManager.addMessage("声音太小，听不清楚", Msg.TYPE_RECEIVE);
+
+                    stopAlinkRec();
+                }else if(status == TYPE_REC_STATUS_VOLUME)
+                {
+                    //0 -100  level [0 1 2 3]
+                    int level = 0;
+                    if(extra < 25)
+                    {
+                        level = 0;
+                    }else if(extra < 50)
+                    {
+                        level = 1;
+                    }else if (extra < 75)
+                    {
+                        level = 2;
+                    }else
+                    {
+                        level = 3;
+                    }
+                    mainManager.changeVioceLevel(level);
+                }
+            }
+
+            @Override
+            public void onMediaEvent(int status, int extra)
+            {
+                //extra  = time
+                //state play = 105?
+                Log.i(TAG, "onMediaEvent :" + status + " extra: " + extra);
+                if (status == TYPE_PAL_STATUS_MUSIC_POSITION)
+                {
+                    double per = extra * 100 / musicTotalTime;
+                    Log.i("tyty", "per = " + per);
+                    mainManager.setMusicCurrentTIme(extra, (int) per);
+                    isAliyunMusicMediaPlaying = true;
+                } else if (status == TYPE_PAL_STATUS_MUSIC_DURATION)
+                {
+                    isAliyunMusicMediaPlaying = true;
+                    musicTotalTime = extra;
+                    //here may set total long
+                } else if (status == TYPE_PAL_STATUS_MUSIC_ERROR || status == TYPE_PAL_STATUS_MUSIC_COMPLETE)
+                {
+                    isAliyunMusicMediaPlaying = false;
+                } else if (TYPE_PAL_STATUS_MUSIC_PAUSE == status)
+                {
+                    isAliyunMusicMediaPlaying = false;
+
+                } else if (TYPE_PAL_STATUS_MUSIC_START == status)
+                {
+                    isAliyunMusicMediaPlaying = true;
+                }
+
+
+            }
+
+            @Override
+            public void onMusicInfo(int resCode, String info)
+            {
+                Log.i(TAG, "onMusicInfo :" + resCode + " info: " + info);
+                isTopApp();
+                if (resCode == 1000)
+                {
+                    try
+                    {
+                        AliyunMusicInfo mCurrentAliyunMusicInfo = JSON.parseObject(info, AliyunMusicInfo.class);
+                        if (mCurrentAliyunMusicInfo != null)
+                        {
+                            Log.i(TAG, mCurrentAliyunMusicInfo.toString());
+                            String musicName = mCurrentAliyunMusicInfo.getName();
+                            mainManager.addMessage("正在播放歌曲：" + musicName, Msg.TYPE_RECEIVE);
+                            mainManager.setMusicInfo(mCurrentAliyunMusicInfo);
+                        }
+                    } catch (Exception e)
+                    {
+                        Log.e(TAG, e.toString());
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onALinkTTSInfo(String s)
+            {
+                Log.i(TAG, "onALinkTTSInfo :" + s);
+                // mainManager.addMessage(s, Msg.TYPE_SEND);
+
+            }
+
+            @Override
+            public void onServerCallback(String s)
+            {
+
+            }
+
+        });
     }
 
     public void stopALinkServer()
@@ -696,6 +865,19 @@ public class ALiYunServer
                 Log.i(TAG, "getCollectionByTag onFailed");
             }
         });
+    }
+
+    public   boolean isTopApp()
+    {
+        ActivityManager activityManager =(ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        ComponentName cn = activityManager.getRunningTasks(1).get(0).topActivity;
+        Log.i("tyty","pacckgename = "+cn.getPackageName());
+        if(cn.getPackageName().equals(""))
+        {
+            return true;
+        }
+        return  false;
+
     }
 
     public enum AliyunState
