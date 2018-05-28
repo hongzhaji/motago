@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.realm.motago.element.TestJson;
@@ -21,6 +22,7 @@ public class MotaMainActivity extends AppCompatActivity
 
     private SupperFragmentManager manager;
     private Toolbar toolbar;
+    private TextView tv;
 
 
     @Override
@@ -36,6 +38,7 @@ public class MotaMainActivity extends AppCompatActivity
         setContentView(v);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
+        tv = toolbar.findViewById(R.id.music_main_title);
 
 
         setSupportActionBar(toolbar);
@@ -45,13 +48,7 @@ public class MotaMainActivity extends AppCompatActivity
             public void onClick(View v)
             {
 
-                if (!manager.backToLastFragment())
-                {
-                    goHome();
-                } else
-                {
-                    toolbar.setTitle("");
-                }
+               backPressed();
 
             }
         });
@@ -74,7 +71,8 @@ public class MotaMainActivity extends AppCompatActivity
         if (keyCode == KeyEvent.KEYCODE_BACK)
         {
 
-            goHome();
+
+backPressed();
 
             return true;
         }
@@ -111,6 +109,10 @@ public class MotaMainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public  void setMainMusicName(String name)
+    {
+        tv.setText(name);
+    }
 
     private void goHome()
     {
@@ -119,6 +121,34 @@ public class MotaMainActivity extends AppCompatActivity
         mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         startActivity(mHomeIntent);
+    }
+
+    private  void  backPressed()
+    {
+        if(!manager.backToLastFragment())
+        {
+            goHome();
+        }
+        else
+        {
+            if(manager.getCurrentMusicInfo()!=null)
+            {
+                tv.setText(manager.getCurrentMusicInfo().getName());
+                tv.setEnabled(true);
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        manager.translateToMotagoMusicFragment();
+                    }
+                });
+            }
+            else
+            {
+                tv.setText("");
+                tv.setEnabled(false);
+            }
+
+        }
     }
 
     private void showExitXiaoZhiDialog()

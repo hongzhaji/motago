@@ -32,6 +32,7 @@ public class AliyunBackstageServer extends Service
     private IGaoShiQingimp imp;
     private Handler delHandler;
     public boolean mIsSensorStart = false;
+    public  boolean mIsServiceSafeStart = false;
     @Override
     public void onCreate()
     {
@@ -102,6 +103,12 @@ public class AliyunBackstageServer extends Service
             @Override
             public void onAlinkStatus(int status)
             {
+                Log.i("aliyun", "onAlinkStatus :" + status);
+                if(PALConstant.TYPE_PAL_STATUS_START_END == status)
+                {
+                    mIsServiceSafeStart = true;
+                }
+
 
                 if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
                 {

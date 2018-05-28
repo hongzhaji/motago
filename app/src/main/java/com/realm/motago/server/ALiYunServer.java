@@ -335,12 +335,24 @@ public class ALiYunServer
 
         mCurrentState = AliyunState.normal;
         AliyunBackstageServer server =  ((MyApplication)mContext.getApplicationContext()).getaLiYunServer();
+
+
+
         if(server == null )
         {
+            //if start not safe. will restart
+
             Log.e("tyty","aliyun service not install err!");
-            Toast.makeText(mContext,"阿里服务没有开启，请重启设备！",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext,"阿里服务没有开启，请重启设备！",Toast.LENGTH_SHORT).show();
           //  ((Activity)mContext).finish();
             ((MyApplication)mContext.getApplicationContext()).bindService();
+            handler.sendEmptyMessageDelayed(1,3000);
+            return;
+        }
+
+        if(!server.mIsServiceSafeStart)
+        {
+            ((MyApplication)mContext.getApplicationContext()).unBindeService();
             handler.sendEmptyMessageDelayed(1,3000);
             return;
         }
@@ -885,7 +897,7 @@ public class ALiYunServer
         ActivityManager activityManager =(ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         ComponentName cn = activityManager.getRunningTasks(1).get(0).topActivity;
         Log.i("tyty","pacckgename = "+cn.getPackageName());
-        if(cn.getPackageName().equals(""))
+        if(cn.getPackageName().equals("com.realm.motago"))
         {
             return true;
         }
