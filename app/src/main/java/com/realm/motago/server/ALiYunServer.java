@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
@@ -82,6 +83,15 @@ public class ALiYunServer
     public static final int TYPE_REC_STATUS_RECOGNIZE_STOP = 302;
     //返回音量大小
     public static final int TYPE_REC_STATUS_VOLUME = 303;
+    private  Handler handler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            super.handleMessage(msg);
+            startALinkServerNew();
+        }
+    };
 
 
     public ALiYunServer(Context context, SupperFragmentManager mainManager)
@@ -328,8 +338,10 @@ public class ALiYunServer
         if(server == null )
         {
             Log.e("tyty","aliyun service not install err!");
-            Toast.makeText(mContext,"阿里服务没有开启，请重启设备！",Toast.LENGTH_LONG).show();
-            ((Activity)mContext).finish();
+            Toast.makeText(mContext,"阿里服务没有开启，请重启设备！",Toast.LENGTH_SHORT).show();
+          //  ((Activity)mContext).finish();
+            ((MyApplication)mContext.getApplicationContext()).bindService();
+            handler.sendEmptyMessageDelayed(1,3000);
             return;
         }
         server .setImp(
@@ -465,7 +477,7 @@ public class ALiYunServer
             public void onMusicInfo(int resCode, String info)
             {
                 Log.i(TAG, "onMusicInfo :" + resCode + " info: " + info);
-                isTopApp();
+                //isTopApp();
                 if (resCode == 1000)
                 {
                     try
@@ -551,6 +563,7 @@ public class ALiYunServer
         {
             ALinkManager.getInstance().stopRec();
             Log.d(TAG, "stopAlinkRec ");
+            mCurrentState = AliyunState.normal;
         }
 
 

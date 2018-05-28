@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">motago</string>
+    <string name="app_name">阿里智能</string>
     <string name="action_settings">Settings</string>
     <string name="menu_1">扫码绑定</string>
     <string name="menu_2">退出小智</string>

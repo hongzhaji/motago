@@ -10,12 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 
 import com.alibaba.fastjson.JSON;
 import com.realm.motago.element.TestJson;
@@ -52,11 +47,7 @@ public class MotaMainActivity extends AppCompatActivity
 
                 if (!manager.backToLastFragment())
                 {
-                    Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
-                    mHomeIntent.addCategory(Intent.CATEGORY_HOME);
-                    mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                    startActivity(mHomeIntent);
+                    goHome();
                 } else
                 {
                     toolbar.setTitle("");
@@ -73,8 +64,21 @@ public class MotaMainActivity extends AppCompatActivity
 //        Log.i("tyty", aaJson.toString());
 
 
+    }
 
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+      
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+
+            goHome();
+
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -105,6 +109,16 @@ public class MotaMainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void goHome()
+    {
+        Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
+        mHomeIntent.addCategory(Intent.CATEGORY_HOME);
+        mHomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        startActivity(mHomeIntent);
     }
 
     private void showExitXiaoZhiDialog()

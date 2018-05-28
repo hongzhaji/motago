@@ -114,6 +114,7 @@ public class AliyunBackstageServer extends Service
                             if (!mIsSensorStart)
                             {
                                 ALinkManager.getInstance().startSensory();
+                                //ALinkManager.getInstance().setVolFallOff(2);
                                 mIsSensorStart = true;
                             }
                             Log.i("tyty", "小智 已经启动 ");
@@ -176,10 +177,18 @@ public class AliyunBackstageServer extends Service
 
     }
 
+    public void stopALinkServer()
+    {
+            ALinkManager.getInstance().stopALink();
+
+    }
+
     @Override
     public void unbindService(ServiceConnection conn)
     {
+        Log.i("tyty","unbindService -- ");
         super.unbindService(conn);
+        stopALinkServer();
     }
 
     public void setImp(IGaoShiQingimp imp)

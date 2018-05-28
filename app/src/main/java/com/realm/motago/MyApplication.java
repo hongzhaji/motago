@@ -22,6 +22,7 @@ public class MyApplication extends MultiDexApplication
 {
 
     private AliyunBackstageServer aLiYunServer;
+    private  boolean isBind ;
     private ServiceConnection serviceConnection = new ServiceConnection()
     {
         @Override
@@ -45,7 +46,8 @@ public class MyApplication extends MultiDexApplication
     {
         super.onCreate();
 
-
+        isBind = false;
+        Log.i("tyty", "version --- 1.0");
         OALoginBusiness oaLoginBusiness = new OALoginBusiness();
         oaLoginBusiness.init(this, Environment.ONLINE, new IAlinkLoginCallback()
         {
@@ -69,13 +71,27 @@ public class MyApplication extends MultiDexApplication
 
     public void bindService()
     {
-        Log.i("tyty","getServiceConnection");
-        Intent intent1 = new Intent(this, AliyunBackstageServer.class);
-        bindService(intent1, serviceConnection, Context.BIND_AUTO_CREATE);
+        Log.i("tyty", "getServiceConnection");
+        if (!isBind)
+        {
+            isBind = true;
+            Intent intent1 = new Intent(this, AliyunBackstageServer.class);
+            bindService(intent1, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+
     }
-    public  void  unBindeService()
+
+    public void unBindeService()
     {
-        unbindService(serviceConnection);
+        Log.i("tyty", "unBindeService");
+        if(isBind)
+        {
+            isBind = false;
+            Log.i("tyty", "unBindeService -- 2");
+            unbindService(serviceConnection);
+            aLiYunServer = null;
+        }
+
     }
 
     public AliyunBackstageServer getaLiYunServer()

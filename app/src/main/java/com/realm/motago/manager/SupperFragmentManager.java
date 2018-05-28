@@ -249,11 +249,12 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     public void finish()
     {
-//        mainServer.stopALinkServer();
+        mainServer.stopSensory();
+        mainServer.stopALinkServer();
 //        if (mainServer.mIsSensorStart)
 //        {
-//            mainServer.stopSensory();
-//        }
+
+ //       }
         MyApplication application = (MyApplication) mContext.getApplicationContext();
         application.unBindeService();
     }
@@ -338,7 +339,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             @Override
             public void onClick(View v)
             {
-                switchAliyunState(false);
+                //due to delay.intnet will delay
+              //  switchAliyunState(false);
                 mainServer.stopAlinkRec();
             }
         });
