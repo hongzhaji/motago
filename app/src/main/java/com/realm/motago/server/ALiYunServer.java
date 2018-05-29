@@ -248,7 +248,6 @@ public class ALiYunServer
             public void onMusicInfo(int resCode, String info)
             {
                 Log.i(TAG, "onMusicInfo :" + resCode + " info: " + info);
-                isTopApp();
                 if (resCode == 1000)
                 {
                     try

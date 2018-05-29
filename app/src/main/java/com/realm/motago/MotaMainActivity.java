@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,9 @@ public class MotaMainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        Log.i("tyty","onCreate");
+
         ViewGroup v = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_mota_main, null);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);// 隐藏标题
@@ -111,7 +115,21 @@ backPressed();
 
     public  void setMainMusicName(String name)
     {
-        tv.setText(name);
+        if(name!=null)
+        {
+            tv.setText(name);
+            tv.setEnabled(true);
+            tv.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    manager.setMusicInfo(manager.getCurrentMusicInfo());
+                }
+            });
+        }
+
+
     }
 
     private void goHome()
@@ -178,4 +196,27 @@ backPressed();
         super.finish();
         manager.finish();
     }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        Log.i("tyty","onPause");
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        Log.i("tyty","onStart");
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        Log.i("tyty","onResume");
+    }
+
+
 }

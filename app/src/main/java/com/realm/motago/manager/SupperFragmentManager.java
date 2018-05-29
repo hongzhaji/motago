@@ -61,10 +61,6 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         {
             super.handleMessage(msg);
 
-
-
-
-
             if (msg.arg1 == MOTA_FRAGMENT_MUSIC)
             {
                 //set current time for music .
@@ -139,7 +135,6 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public void setMusicInfo(AliyunMusicInfo musicInfo)
     {
         mCurrentAliyunMusicInfo = musicInfo;
-
         Message msg = mUIHandler.obtainMessage();
         msg.arg1 = MOTA_FRAGMENT_MUSIC;
         msg.obj = musicInfo;
@@ -213,21 +208,17 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         return false;
     }
 
-    private  boolean commingfromHome = false;
     public void addMessage(String msg, int type)
     {
 
         if(!mainServer.isTopApp())
         {
             Intent intent = new Intent(mContext,MotaMainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
             mContext.startActivity(intent);
-            commingfromHome = true;
-        }
-        else
-        {
-            commingfromHome = false;
-        }
 
+        }
         mesHelper.addMessage(msg, type);
         //if receive ,may stop rec.
         if (type == Msg.TYPE_RECEIVE)
@@ -300,7 +291,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     public void translateToMotagoMusicFragment()
     {
-
+        Log.i("tyty","translateToMotagoMusicFragment start");
         try {
             FragmentTransaction transaction = motaManager.beginTransaction();
             transaction.hide(kindFragment[mCurrentFragmentIndex]);
@@ -316,7 +307,11 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             }
         }catch (Exception e)
         {
-
+            Log.i("tyty","translateToMotagoMusicFragment err"+e.toString());
+            if(mCurrentFragmentIndex == MOTA_FRAGMENT_MAIN)
+            {
+                ((MotaMainActivity)mContext).setMainMusicName(mCurrentAliyunMusicInfo.getName());
+            }
         }
 
 
