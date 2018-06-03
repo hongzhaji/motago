@@ -18,6 +18,8 @@
                   android:button="@null"
                   android:id="@+id/mota_music_list_play"
                   android:layout_marginLeft="20dp"
+            android:textSize="18px"
+            android:textColor="@android:color/white"
         />
         <CheckBox android:layout_width="wrap_content" android:layout_height="match_parent"
                   android:text="我的收藏"
@@ -26,6 +28,8 @@
                   android:id="@+id/mota_music_list_loved"
                   android:layout_toRightOf="@id/mota_music_list_play"
                   android:layout_marginLeft="80dp"
+            android:textSize="18px"
+            android:textColor="@android:color/white"
         />
     </RelativeLayout>
 

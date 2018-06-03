@@ -129,6 +129,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         FragmentTransaction transaction = motaManager.beginTransaction();
         transaction.hide(kindFragment[mCurrentFragmentIndex]);
         transaction.show(kindFragment[MOTA_FRAGMENT_XIAOZHI]).commit();
+        mBottomView.setVisibility(View.GONE);
+        mVoiceInput.setVisibility(View.GONE);
         mCurrentFragmentIndex = MOTA_FRAGMENT_XIAOZHI;
     }
 
@@ -182,6 +184,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             transaction.hide(kindFragment[MOTA_FRAGMENT_XIAOZHI]);
             transaction.show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
             mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
+            mVoiceInput.setVisibility(View.VISIBLE);
             return true;
         } else if (mCurrentFragmentIndex == MOTA_FRAGMENT_MUSIC && ((MotaMusicFragment) kindFragment[MOTA_FRAGMENT_MUSIC]).onNavigationCLick())
         {

@@ -80,19 +80,30 @@
         android:layout_gravity="center"
             app:contentInsetStart="0dp"
 
+
             >
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:gravity="center"
 android:id="@+id/music_main_title"
                 android:layout_marginRight="10dp"
                 android:textSize="16px"
                 android:singleLine="true"
                 android:clickable="true"
+                android:layout_gravity="center_horizontal"
                 />
 
+            <Button
+                android:layout_width="28dp"
+                android:layout_height="20dp"
+                android:text="@null"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:id="@+id/main_menu"
+                android:background="@drawable/music_play_list_n"
+                />
         </android.support.v7.widget.Toolbar>>
 
     </android.support.design.widget.AppBarLayout>

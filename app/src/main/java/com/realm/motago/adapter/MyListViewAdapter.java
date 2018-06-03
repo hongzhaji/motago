@@ -90,11 +90,15 @@ public class MyListViewAdapter extends BaseAdapter
         });
         if(myMusicInfos.get(position).getPlayTime() != 0)
         {
-            convertView.setBackgroundColor(Color.BLUE);
+            //convertView.setBackgroundColor(Color.BLUE);
+            holder.tvName.setTextColor(Color.parseColor("#B42227"));
+            holder.tvArtis.setTextColor(Color.parseColor("#A92127"));
         }
         else
         {
-            convertView.setBackgroundColor(Color.TRANSPARENT);
+            //convertView.setBackgroundColor(Color.TRANSPARENT);
+            holder.tvName.setTextColor(Color.parseColor("#ffffff"));
+            holder.tvArtis.setTextColor(Color.parseColor("#999999"));
         }
 
         return convertView;

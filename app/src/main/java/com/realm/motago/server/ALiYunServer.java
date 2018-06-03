@@ -100,6 +100,7 @@ public class ALiYunServer
         this.mainManager = mainManager;
 
         isAliyunMusicMediaPlaying = false;
+
     }
 
     private static final int SERVER_ONLINE = 201;
@@ -525,6 +526,9 @@ public class ALiYunServer
             }
 
         });
+
+        //setvoloff
+        ALinkManager.getInstance().setVolFallOff(5);
     }
 
     public void stopALinkServer()

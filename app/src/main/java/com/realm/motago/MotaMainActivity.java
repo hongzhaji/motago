@@ -1,6 +1,7 @@
 package com.realm.motago;
 
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,10 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.*;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.realm.motago.element.TestJson;
+import com.realm.motago.manager.FontManager;
 import com.realm.motago.manager.SupperFragmentManager;
 
 public class MotaMainActivity extends AppCompatActivity
@@ -24,6 +30,7 @@ public class MotaMainActivity extends AppCompatActivity
     private SupperFragmentManager manager;
     private Toolbar toolbar;
     private TextView tv;
+    private Button mainMenu;
 
 
     @Override
@@ -35,6 +42,9 @@ public class MotaMainActivity extends AppCompatActivity
 
         ViewGroup v = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_mota_main, null);
 
+        //change fonts
+        FontManager.changeFonts(v,this);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);// 隐藏标题
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -42,7 +52,15 @@ public class MotaMainActivity extends AppCompatActivity
         setContentView(v);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
+
         tv = toolbar.findViewById(R.id.music_main_title);
+        mainMenu = toolbar.findViewById(R.id.main_menu);
+        mainMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopMen();
+            }
+        });
 
 
         setSupportActionBar(toolbar);
@@ -87,8 +105,8 @@ backPressed();
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mota_main, menu);
-        return true;
+       // getMenuInflater().inflate(R.menu.menu_mota_main, menu);
+        return false;
     }
 
     @Override
@@ -132,6 +150,37 @@ backPressed();
 
     }
 
+    private void showPopMen()
+    {
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.main_popu_menu,null);
+        final PopupWindow popupWindow = new PopupWindow(linearLayout,80,110);
+        Button xiaoziButoon = linearLayout.findViewById(R.id.main_menu_xiaozhi);
+        xiaoziButoon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                manager.onXiaoZhiClick();
+                //toolbar.setTitle("我是阿里小智");
+                popupWindow.dismiss();
+            }
+        });
+        Button exitButoon = linearLayout.findViewById(R.id.main_menu_exit);
+        exitButoon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showExitXiaoZhiDialog();
+                popupWindow.dismiss();
+            }
+        });
+
+
+
+        popupWindow.setFocusable(true);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.showAtLocation(toolbar,Gravity.RIGHT|Gravity.TOP,0,48);
+
+
+    }
+
     private void goHome()
     {
         Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
@@ -171,23 +220,57 @@ backPressed();
 
     private void showExitXiaoZhiDialog()
     {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("确认退出阿里小智？")
+//                .setMessage("")
+//                .setPositiveButton("确定", new DialogInterface.OnClickListener()
+//                {
+//                    public void onClick(DialogInterface dialog, int id)
+//                    {
+//                        finish();
+//                    }
+//                })
+//                .setNegativeButton("取消", new DialogInterface.OnClickListener()
+//                {
+//                    public void onClick(DialogInterface dialog, int id)
+//                    {
+//                        dialog.dismiss();
+//                    }
+//                }).show();
+LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.popu_xiaozhi_exit,null);
+//layout.setBackgroundResource(R.mipmap.main_menu_bg);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("确认退出阿里小智？")
-                .setMessage("")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        finish();
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        dialog.dismiss();
-                    }
-                }).show();
+        final AlertDialog dialog = builder.create();
+
+        dialog.show();
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(240,120);
+        layoutParams.leftMargin = 10;
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+
+
+
+        dialog.getWindow().setContentView(layout,layoutParams);
+        dialog.getWindow().setGravity(Gravity.CENTER_HORIZONTAL);
+        dialog.getWindow().setBackgroundDrawableResource(R.mipmap.main_menu_bg);
+        dialog.getWindow().setLayout(240,120);
+
+        Button cancel = layout.findViewById(R.id.xiaozhi_exit_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        Button sure = layout.findViewById(R.id.xiaozhi_exit_sure);
+        sure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+                finish();
+            }
+        });
+
     }
 
     @Override

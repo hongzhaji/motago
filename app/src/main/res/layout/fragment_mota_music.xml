@@ -3,7 +3,7 @@
                                              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
                                              android:layout_height="match_parent"
 
-                                             android:layout_marginTop="40dp"
+                                             android:layout_marginTop="58dp"
 
 >
 
@@ -11,10 +11,11 @@
             android:text="歌名"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/music_name"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.492"
-            android:textColor="#ffffff"
-            android:textSize="28px"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"
+            android:textColor="#bbffffff"
+            android:textSize="20px"
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="marquee"
@@ -27,8 +28,8 @@
             android:layout_height="wrap_content" android:id="@+id/music_artis"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="10dp" app:layout_constraintTop_toBottomOf="@+id/music_name" android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:textColor="#ffffff"
-            android:textSize="18px"
+            android:textColor="#bbffffff"
+            android:textSize="14px"
             android:gravity="center"
             android:singleLine="true"
     />
@@ -44,7 +45,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2" />
+            app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintVertical_bias="0.67"
+        />
     <Button
             android:text="@null"
             android:layout_width="20dp"
@@ -55,8 +58,7 @@
             app:layout_constraintStart_toEndOf="@+id/music_play_model"
             android:background="@drawable/music_play_sel_last"
             app:layout_constraintEnd_toStartOf="@+id/music_play_play"
-
-
+        app:layout_constraintVertical_bias="0.67"
             />
     <Button
             android:text="@null"
@@ -65,7 +67,9 @@
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="8dp"
             android:background="@drawable/music_play_sel_play"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="8dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"/>
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+            app:layout_constraintVertical_bias="0.67"
+        />
     <Button
             android:text="@null"
             android:layout_width="20dp"
@@ -76,6 +80,7 @@
             app:layout_constraintStart_toEndOf="@+id/music_play_play"
             android:background="@drawable/music_play_sel_next"
             app:layout_constraintEnd_toStartOf="@+id/music_play_list"
+        app:layout_constraintVertical_bias="0.67"
           />
     <Button
             android:text="@null"
@@ -87,14 +92,16 @@
             app:layout_constraintHorizontal_bias="0.8"
             android:background="@drawable/music_play_sel_list"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.67"
+        />
     <SeekBar
             android:layout_width="300dp"
             android:layout_height="wrap_content" android:id="@+id/music_seek" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintTop_toBottomOf="@+id/music_artis"
             android:max="100"
-
+          android:layout_marginTop="30dp"
 
 
 
@@ -105,10 +112,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/music_current_time" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toStartOf="@+id/music_seek" android:layout_marginEnd="8dp" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="18dp" app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp" app:layout_constraintHorizontal_bias="0.722"
-            app:layout_constraintVertical_bias="0.292"
+            android:layout_marginTop="18dp" app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+        app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintVertical_bias="0.38"
             android:singleLine="true"
-            android:textColor="#ffffff"
+            android:textColor="#e0ffffff"
+        android:textSize="10px"
 
     />
     <TextView
@@ -117,9 +126,10 @@
             android:layout_height="wrap_content" android:id="@+id/music_total_time" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="18dp"
             app:layout_constraintStart_toEndOf="@+id/music_seek" android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintHorizontal_bias="0.333" app:layout_constraintVertical_bias="0.292"
+            app:layout_constraintHorizontal_bias="0" app:layout_constraintVertical_bias="0.38"
             android:singleLine="true"
-            android:textColor="#ffffff"
+            android:textColor="#e0ffffff"
+        android:textSize="10px"
     />
     <CheckBox
             android:text="@null"
