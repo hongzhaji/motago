@@ -32,13 +32,13 @@
 
         <Button
             android:id="@+id/cancel_record"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="22dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@mipmap/cancel_record"
+            android:background="@drawable/voice_cancel"
             android:text="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +102,7 @@ android:id="@+id/music_main_title"
                 android:layout_marginRight="10dp"
                 android:clickable="true"
                 android:id="@+id/main_menu"
-                android:background="@drawable/music_play_list_n"
+                android:background="@drawable/main_menu"
                 />
         </android.support.v7.widget.Toolbar>>
 

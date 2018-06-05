@@ -46,7 +46,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintVertical_bias="0.67"
+        app:layout_constraintVertical_bias="0.64"
         />
     <Button
             android:text="@null"
@@ -58,7 +58,7 @@
             app:layout_constraintStart_toEndOf="@+id/music_play_model"
             android:background="@drawable/music_play_sel_last"
             app:layout_constraintEnd_toStartOf="@+id/music_play_play"
-        app:layout_constraintVertical_bias="0.67"
+        app:layout_constraintVertical_bias="0.64"
             />
     <Button
             android:text="@null"
@@ -80,7 +80,7 @@
             app:layout_constraintStart_toEndOf="@+id/music_play_play"
             android:background="@drawable/music_play_sel_next"
             app:layout_constraintEnd_toStartOf="@+id/music_play_list"
-        app:layout_constraintVertical_bias="0.67"
+        app:layout_constraintVertical_bias="0.64"
           />
     <Button
             android:text="@null"
@@ -93,7 +93,7 @@
             android:background="@drawable/music_play_sel_list"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_bias="0.67"
+        app:layout_constraintVertical_bias="0.64"
         />
     <SeekBar
             android:layout_width="300dp"

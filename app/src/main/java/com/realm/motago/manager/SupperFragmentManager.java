@@ -72,6 +72,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                 } else if (msg.what == 3)
                 {
 
+
                     ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setMusiclistAdapter((List<AliyunMusicInfo>) msg.obj,mCurrentAliyunMusicInfo);
                     ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setHelp(SupperFragmentManager.this);
                     translateToMotagoListFragment();
@@ -294,7 +295,6 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     public void translateToMotagoMusicFragment()
     {
-        Log.i("tyty","translateToMotagoMusicFragment start");
         try {
             FragmentTransaction transaction = motaManager.beginTransaction();
             transaction.hide(kindFragment[mCurrentFragmentIndex]);
@@ -310,7 +310,6 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             }
         }catch (Exception e)
         {
-            Log.i("tyty","translateToMotagoMusicFragment err"+e.toString());
             if(mCurrentFragmentIndex == MOTA_FRAGMENT_MAIN)
             {
                 ((MotaMainActivity)mContext).setMainMusicName(mCurrentAliyunMusicInfo.getName());
@@ -322,6 +321,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 
     private void translateToMotagoListFragment()
     {
+
         FragmentTransaction transaction = motaManager.beginTransaction();
         transaction.hide(kindFragment[mCurrentFragmentIndex]);
         transaction.show(kindFragment[MOTA_FRAGMENT_LIST]).commit();

@@ -97,6 +97,8 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
 
     public void setMusiclistAdapter(List<AliyunMusicInfo> infos,AliyunMusicInfo cur)
 {
+
+
     adapter.setPlayListAdapter(infos);
     // need invalue.use not used param playtime
     for (AliyunMusicInfo info : infos)

@@ -860,8 +860,8 @@ public class ALiYunServer
     }
 
     //may be is here
-    public void getPlayDetailList(String uuid, String from, String size,
-                                              String direct, String collectionId) {
+    public void getPlayDetailList(final String uuid, final String from, final String size,
+                                  final String direct, final String collectionId) {
         TransitoryRequest transitoryRequest = new TransitoryRequest();
         transitoryRequest.setMethod("mtop.openalink.pal.collectiondetaillist.get");
         transitoryRequest.needToken = false;
@@ -874,23 +874,46 @@ public class ALiYunServer
 
         ALinkBusinessEx biz = new ALinkBusinessEx();
         biz.request(transitoryRequest, new ALinkBusinessEx.IListener() {
+
+            List<AliyunMusicInfo> musicList = null;
+
             @Override
             public void onSuccess(TransitoryRequest transitoryRequest, TransitoryResponse transitoryResponse) {
                 Log.i(TAG, "getCollectionByTag ------------------ onSuccess");
+
+
+
                 if (transitoryResponse != null && transitoryResponse.data != null) {
                     Log.i(TAG, "getCollectionByTag data: "+ transitoryResponse.data.toString());
 
                     JSONObject jsonObject = JSON.parseObject(transitoryResponse.data.toString());
                     String datas = jsonObject.getString("datas");
-                    List<AliyunMusicInfo> musicList = JSON.parseArray(datas, AliyunMusicInfo.class);
-                    Log.i(TAG, "size = " + musicList.size());
+                     musicList = JSON.parseArray(datas, AliyunMusicInfo.class);
                     mainManager.setListAdepterAndAliyunMusicIfos(musicList);
                 }
+
             }
 
             @Override
             public void onFailed(TransitoryRequest transitoryRequest, AError aError) {
+
                 Log.i(TAG, "getCollectionByTag onFailed");
+
+                AliyunMusicInfo info = mainManager.getCurrentMusicInfo();
+
+                musicList = new ArrayList<AliyunMusicInfo>();
+                musicList.add(info);
+
+                mainManager.setListAdepterAndAliyunMusicIfos(musicList);
+
+
+                //test
+
+               // getPlayList(uuid,"1",from,size,direct,""+info.getChannelId(),collectionId,""+info.getId());
+
+
+
+
             }
         });
     }

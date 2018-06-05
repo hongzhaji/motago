@@ -31,6 +31,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="54dp"
         android:textSize="20px"
+        android:id="@+id/main_warn_info_1"
         />
 
     <TextView

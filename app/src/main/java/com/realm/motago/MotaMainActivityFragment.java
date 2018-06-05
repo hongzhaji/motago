@@ -27,6 +27,8 @@ public class MotaMainActivityFragment extends Fragment implements SupperFragment
 
     private RecyclerView recyclerView;
     private TextView mWarnInfoTextView;
+    private TextView mWarnInfoTextView_1;
+
     private MsgAdapter adapter;
     private boolean mWarnInfohide ;
     List<Msg> msgList = new ArrayList<>();
@@ -40,6 +42,7 @@ public class MotaMainActivityFragment extends Fragment implements SupperFragment
             if(!mWarnInfohide)
             {
                 mWarnInfoTextView.setVisibility(View.GONE);
+                mWarnInfoTextView_1.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
 
@@ -76,6 +79,9 @@ public class MotaMainActivityFragment extends Fragment implements SupperFragment
 
         mWarnInfoTextView = viewGroup.findViewById(R.id.main_warn_info);
         mWarnInfoTextView.setVisibility(View.VISIBLE);
+        mWarnInfoTextView_1 = viewGroup.findViewById(R.id.main_warn_info_1);
+        mWarnInfoTextView_1.setVisibility(View.VISIBLE);
+
         mWarnInfohide = false;
         return viewGroup;
     }
