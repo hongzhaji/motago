@@ -63,6 +63,7 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
                 {
                     lovedCB.setChecked(true);
                     playCB.setChecked(false);
+
                 }else  if(position == 0)
                 {
                     lovedCB.setChecked(false);

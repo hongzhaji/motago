@@ -54,6 +54,8 @@ public class ALiYunServer
     private boolean isAliyunMusicMediaPlaying;
     private long musicTotalTime = -1;
 
+    private MusicChannel mLovedChannel;
+
 
 
 
@@ -100,6 +102,8 @@ public class ALiYunServer
         this.mainManager = mainManager;
 
         isAliyunMusicMediaPlaying = false;
+
+
 
     }
 
@@ -529,6 +533,8 @@ public class ALiYunServer
 
         //setvoloff
         ALinkManager.getInstance().setVolFallOff(5);
+        //get 收藏 channel
+        getChannelList(AlinkDevice.getInstance().getDeviceUUID());
     }
 
     public void stopALinkServer()
@@ -802,6 +808,10 @@ public class ALiYunServer
                             musicChannel.seqNum = channelItem.getString("seqNum");
                             musicChannel.supportCache = channelItem.getString("supportCache");
                             Log.i("tyty",musicChannel.toString());
+                            if(musicChannel.channelType.equals("3"))
+                            {
+                                mLovedChannel = musicChannel;
+                            }
                         }
                     }
                 } catch (Exception e) {
@@ -826,7 +836,7 @@ public class ALiYunServer
         transitoryRequest.putParam("from", from);
         transitoryRequest.putParam("size", size);
         transitoryRequest.putParam("direct", direct);
-        transitoryRequest.putParam("channelId", "629328");
+        transitoryRequest.putParam("channelId", mLovedChannel.channelId);
         //音乐收藏
         transitoryRequest.putParam("channelType", ""+3);
         Log.i("tyty"," id = "+collectionID);

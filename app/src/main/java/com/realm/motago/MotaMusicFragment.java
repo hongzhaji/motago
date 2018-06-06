@@ -90,14 +90,14 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
     public void setMusicCurrentTime(String time, int percent)
     {
 
-        if(musicInfo ==null)
+        if(time == null || musicInfo ==null)
         {
             Log.i("tyty","---music = null");
             return;
         }
 
 
-        if (time.equals("") || musicInfo.getDuration().equals(""))
+        if (time.equals("") || musicInfo.getDuration() == null || musicInfo.getDuration().equals(""))
         {
 
             //set recompense total time.

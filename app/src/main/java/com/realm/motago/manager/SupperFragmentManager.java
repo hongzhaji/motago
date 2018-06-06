@@ -215,7 +215,8 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     public void addMessage(String msg, int type)
     {
 
-        if(!mainServer.isTopApp())
+        //only commulicat . if a music,not open app
+        if(!mainServer.isTopApp() && type == Msg.TYPE_SEND)
         {
             Intent intent = new Intent(mContext,MotaMainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

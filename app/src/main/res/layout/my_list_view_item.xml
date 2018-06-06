@@ -9,7 +9,7 @@
 
     <TextView
             android:text="TextView"
-            android:layout_width="120dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:id="@+id/list_view_item_music_name"
             android:layout_alignParentLeft="true"
@@ -31,7 +31,7 @@
             android:layout_alignLeft="@id/list_view_item_music_name"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:layout_marginLeft="130dp"
+            android:layout_marginLeft="260dp"
             android:textColor="#999999"
             android:textSize="16px"
             android:ellipsize="marquee"
