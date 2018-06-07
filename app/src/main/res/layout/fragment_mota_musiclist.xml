@@ -9,17 +9,17 @@
     <RelativeLayout android:layout_width="match_parent" android:layout_height="30dp"
                     android:background="@mipmap/music_channel_backgrand"
                     android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
     >
         <CheckBox android:layout_width="wrap_content" android:layout_height="match_parent"
-        android:text="正在播放"
+                  android:text="正在播放"
                   android:background="@mipmap/music_channel_selected"
                   android:button="@null"
                   android:id="@+id/mota_music_list_play"
                   android:layout_marginLeft="20dp"
-            android:textSize="18px"
-            android:textColor="@android:color/white"
+                  android:textSize="18px"
+                  android:textColor="@android:color/white"
         />
         <CheckBox android:layout_width="wrap_content" android:layout_height="match_parent"
                   android:text="我的收藏"
@@ -28,14 +28,17 @@
                   android:id="@+id/mota_music_list_loved"
                   android:layout_toRightOf="@id/mota_music_list_play"
                   android:layout_marginLeft="80dp"
-            android:textSize="18px"
-            android:textColor="@android:color/white"
+                  android:textSize="18px"
+                  android:textColor="@android:color/white"
         />
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager android:layout_width="match_parent" android:layout_height="match_parent"
                                        android:id="@+id/list_music_pageview"
-                                       android:layout_margin="20dp"
+                                       android:layout_marginTop="8dp"
+                                       android:layout_marginLeft="20dp"
+                                       android:layout_marginRight="20dp"
+                                       android:layout_marginBottom="10dp"
 
     ></android.support.v4.view.ViewPager>
 

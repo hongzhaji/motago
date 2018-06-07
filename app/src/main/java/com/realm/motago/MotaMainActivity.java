@@ -154,7 +154,7 @@ backPressed();
     private void showPopMen()
     {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.main_popu_menu,null);
-        final PopupWindow popupWindow = new PopupWindow(linearLayout,80,110);
+        final PopupWindow popupWindow = new PopupWindow(linearLayout,100,120);
         Button xiaoziButoon = linearLayout.findViewById(R.id.main_menu_xiaozhi);
         xiaoziButoon.setOnClickListener(new View.OnClickListener() {
             @Override

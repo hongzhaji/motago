@@ -46,7 +46,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     // User interaction
     private Button mVoiceInput;
     private Button getmVoiceCancel;
-    private  ImageView voiceLevelView;
+    private ImageView voiceLevelView;
 
     private ViewGroup mBottomView;
     private int mCurrentFragmentIndex;
@@ -73,7 +73,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                 {
 
 
-                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setMusiclistAdapter((List<AliyunMusicInfo>) msg.obj,mCurrentAliyunMusicInfo);
+                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setMusiclistAdapter((List<AliyunMusicInfo>) msg.obj, mCurrentAliyunMusicInfo);
                     ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setHelp(SupperFragmentManager.this);
                     translateToMotagoListFragment();
 
@@ -96,9 +96,9 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             if (msg.what == 1)
             {
                 switchAliyunState(false);
-            }else if(msg.what == 2)
+            } else if (msg.what == 2)
             {
-                setVoiceLevel((int)msg.obj);
+                setVoiceLevel((int) msg.obj);
             }
 
         }
@@ -119,7 +119,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
 
         switchAliyunState(false);
-       // mainServer.startALinkServer();
+        // mainServer.startALinkServer();
         mainServer.startALinkServerNew();
     }
 
@@ -193,6 +193,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             transaction.hide(kindFragment[MOTA_FRAGMENT_MUSIC]);
             transaction.show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
             mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
+            mVoiceInput.setVisibility(View.VISIBLE);
             /*
             if (mainServer.isAliyunMusicMediaPlaying())
             {
@@ -206,6 +207,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             transaction.hide(kindFragment[MOTA_FRAGMENT_LIST]);
             transaction.show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
             mCurrentFragmentIndex = MOTA_FRAGMENT_MUSIC;
+            mVoiceInput.setVisibility(View.VISIBLE);
             return true;
         }
 
@@ -216,10 +218,10 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     {
 
         //only commulicat . if a music,not open app
-        if(!mainServer.isTopApp() && type == Msg.TYPE_SEND)
+        if (!mainServer.isTopApp() && type == Msg.TYPE_SEND)
         {
-            Intent intent = new Intent(mContext,MotaMainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intent = new Intent(mContext, MotaMainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             mContext.startActivity(intent);
 
@@ -250,7 +252,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         }
     }
 
-    public  void changeVioceLevel(int level)
+    public void changeVioceLevel(int level)
     {
         Message message = mUIHandler.obtainMessage();
         message.what = 2;
@@ -266,20 +268,20 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
 //        if (mainServer.mIsSensorStart)
 //        {
 
- //       }
+        //       }
         MyApplication application = (MyApplication) mContext.getApplicationContext();
         application.unBindeService();
     }
 
-    private  void setVoiceLevel(int level)
+    private void setVoiceLevel(int level)
     {
 
-        Log.i("tyty","voice level = "+level);
+        Log.i("tyty", "voice level = " + level);
         switch (level)
         {
             case 0:
                 voiceLevelView.setImageResource(R.mipmap.voice_level_0);
-            break;
+                break;
             case 1:
                 voiceLevelView.setImageResource(R.mipmap.voice_level_1);
                 break;
@@ -289,31 +291,35 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             case 3:
                 voiceLevelView.setImageResource(R.mipmap.voice_level_3);
                 break;
-           default:
+            default:
                 break;
         }
     }
 
     public void translateToMotagoMusicFragment()
     {
-        try {
+        try
+        {
             FragmentTransaction transaction = motaManager.beginTransaction();
             transaction.hide(kindFragment[mCurrentFragmentIndex]);
             transaction.show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
             mCurrentFragmentIndex = MOTA_FRAGMENT_MUSIC;
-            switchAliyunState(false);
-            if(mCurrentFragmentIndex == MOTA_FRAGMENT_MUSIC)
+            //switchAliyunState(false);
+            mBottomView.setVisibility(View.GONE);
+            mVoiceInput.setVisibility(View.GONE);
+
+            if (mCurrentFragmentIndex == MOTA_FRAGMENT_MUSIC)
             {
-                ((MotaMainActivity)mContext).setMainMusicName("");
-            }else if(mCurrentFragmentIndex == MOTA_FRAGMENT_MAIN)
+                ((MotaMainActivity) mContext).setMainMusicName("");
+            } else if (mCurrentFragmentIndex == MOTA_FRAGMENT_MAIN)
             {
-                ((MotaMainActivity)mContext).setMainMusicName(mCurrentAliyunMusicInfo.getName());
+                ((MotaMainActivity) mContext).setMainMusicName(mCurrentAliyunMusicInfo.getName());
             }
-        }catch (Exception e)
+        } catch (Exception e)
         {
-            if(mCurrentFragmentIndex == MOTA_FRAGMENT_MAIN)
+            if (mCurrentFragmentIndex == MOTA_FRAGMENT_MAIN)
             {
-                ((MotaMainActivity)mContext).setMainMusicName(mCurrentAliyunMusicInfo.getName());
+                ((MotaMainActivity) mContext).setMainMusicName(mCurrentAliyunMusicInfo.getName());
             }
         }
 
@@ -327,6 +333,9 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         transaction.hide(kindFragment[mCurrentFragmentIndex]);
         transaction.show(kindFragment[MOTA_FRAGMENT_LIST]).commit();
         mCurrentFragmentIndex = MOTA_FRAGMENT_LIST;
+
+        mBottomView.setVisibility(View.GONE);
+        mVoiceInput.setVisibility(View.GONE);
 
     }
 
@@ -375,7 +384,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             }
         });
 
-         voiceLevelView = mRootView.findViewById(R.id.imageView_recording_level);
+        voiceLevelView = mRootView.findViewById(R.id.imageView_recording_level);
 
         mBottomView = mRootView.findViewById(R.id.bottom_recording);
     }
