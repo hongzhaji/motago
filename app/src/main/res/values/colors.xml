@@ -3,4 +3,10 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#DD2525</color>
+
+
+    <color name="menu_color_p">#cccccc</color>
+    <color name="menu_color_n">#e7e8eb</color>
+
+
 </resources>

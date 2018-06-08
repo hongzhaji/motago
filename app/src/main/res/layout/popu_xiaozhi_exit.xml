@@ -16,9 +16,9 @@
             android:background="#e7e8eb"
 
     />
-    <view android:layout_width="match_parent" android:layout_height="1px"
+    <View android:layout_width="match_parent" android:layout_height="1px"
           android:background="#999999"
-    ></view>
+    ></View>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -34,12 +34,13 @@
                 android:id="@+id/xiaozhi_exit_cancel"
                 android:textColor="#333333"
                 android:textSize="16px"
-                android:background="@drawable/dialog_xiaozhi_cancel"
+                android:background="@drawable/menu_exit"
+
 
         />
-        <view android:layout_width="1px" android:layout_height="match_parent"
+        <View android:layout_width="1px" android:layout_height="match_parent"
               android:background="#999999"
-        ></view>
+        ></View>
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -48,7 +49,7 @@
                 android:id="@+id/xiaozhi_exit_sure"
                 android:textColor="#333333"
                 android:textSize="16px"
-                android:background="@drawable/dialog_xiaozhi_sure"
+                android:background="@drawable/menu_exit"
         />
 
     </LinearLayout>

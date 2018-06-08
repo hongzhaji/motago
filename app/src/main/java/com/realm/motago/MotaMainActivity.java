@@ -200,7 +200,7 @@ backPressed();
         }
         else
         {
-            if(manager.getCurrentMusicInfo()!=null)
+            if(manager.getCurrentMusicInfo()!=null || manager.isMainFragment())
             {
                 tv.setText(manager.getCurrentMusicInfo().getName());
                 tv.setEnabled(true);

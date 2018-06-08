@@ -193,7 +193,6 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             transaction.hide(kindFragment[MOTA_FRAGMENT_MUSIC]);
             transaction.show(kindFragment[MOTA_FRAGMENT_MAIN]).commit();
             mCurrentFragmentIndex = MOTA_FRAGMENT_MAIN;
-            mVoiceInput.setVisibility(View.VISIBLE);
             /*
             if (mainServer.isAliyunMusicMediaPlaying())
             {
@@ -252,6 +251,11 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
         }
     }
 
+    public  boolean isMainFragment()
+    {
+        return mCurrentFragmentIndex == MOTA_FRAGMENT_MAIN;
+    }
+
     public void changeVioceLevel(int level)
     {
         Message message = mUIHandler.obtainMessage();
@@ -304,9 +308,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
             transaction.hide(kindFragment[mCurrentFragmentIndex]);
             transaction.show(kindFragment[MOTA_FRAGMENT_MUSIC]).commit();
             mCurrentFragmentIndex = MOTA_FRAGMENT_MUSIC;
-            //switchAliyunState(false);
-            mBottomView.setVisibility(View.GONE);
-            mVoiceInput.setVisibility(View.GONE);
+            switchAliyunState(false);
 
             if (mCurrentFragmentIndex == MOTA_FRAGMENT_MUSIC)
             {
