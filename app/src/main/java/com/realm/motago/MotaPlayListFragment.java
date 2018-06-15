@@ -100,7 +100,7 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
 {
 
 
-    adapter.setPlayListAdapter(infos);
+    adapter.setPlayListAdapter(infos,cur.getSeqNum());
     // need invalue.use not used param playtime
     for (AliyunMusicInfo info : infos)
     {
@@ -115,9 +115,9 @@ public class MotaPlayListFragment extends Fragment implements CompoundButton.OnC
 
 }
 
-    public void setLovedlistAdapter(List<AliyunMusicInfo> infos)
+    public void setLovedlistAdapter(List<AliyunMusicInfo> infos,AliyunMusicInfo cur)
     {
-        adapter.setLovedListAdapter(infos);
+        adapter.setLovedListAdapter(infos,cur.getSeqNum());
 
     }
 

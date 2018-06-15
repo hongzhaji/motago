@@ -13,7 +13,7 @@
     <android.support.v7.widget.RecyclerView android:layout_width="match_parent" android:layout_height="match_parent"
                                             android:id="@+id/msg_recyclerView"
                                             android:layout_marginTop="55dp"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="54dp"
         android:overScrollMode="never"
     >
     </android.support.v7.widget.RecyclerView>
@@ -23,7 +23,7 @@
         android:layout_width="201dp"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:text="您可以这样说：\n"
+        android:text="您可以这样说\n"
         android:gravity="center"
         android:textColor="#ffffff"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +32,8 @@
         android:layout_marginTop="54dp"
         android:textSize="20px"
         android:id="@+id/main_warn_info_1"
+        android:layout_marginLeft="2dp"
+
         />
 
     <TextView

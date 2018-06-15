@@ -360,6 +360,8 @@ public class ALiYunServer
             handler.sendEmptyMessageDelayed(1,3000);
             return;
         }
+
+
         server .setImp(
         new AliyunBackstageServer.IGaoShiQingimp()
         {

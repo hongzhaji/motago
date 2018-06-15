@@ -106,12 +106,7 @@ public class AliyunBackstageServer extends Service
                 Log.i("aliyun", "onAlinkStatus :" + status);
                 if(PALConstant.TYPE_PAL_STATUS_START_END == status)
                 {
-                    mIsServiceSafeStart = true;
-                }
 
-
-                if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
-                {
                     delHandler.postDelayed(new Runnable()
                     {
                         @Override
@@ -124,9 +119,17 @@ public class AliyunBackstageServer extends Service
                                 //ALinkManager.getInstance().setVolFallOff(2);
                                 mIsSensorStart = true;
                             }
+                            ALinkManager.getInstance().switchPlayMode();
                             Log.i("tyty", "小智 已经启动 ");
                         }
                     }, 1000);
+                    mIsServiceSafeStart = true;
+                }
+
+
+                if (PALConstant.TYPE_PAL_STATUS_START_ALINK == status)
+                {
+
                 }
                 if (imp != null)
                 {

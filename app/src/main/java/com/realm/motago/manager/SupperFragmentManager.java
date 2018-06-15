@@ -80,7 +80,7 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
                     return;
                 } else if (msg.what == 4)
                 {
-                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setLovedlistAdapter((List<AliyunMusicInfo>) msg.obj);
+                    ((MotaPlayListFragment) kindFragment[MOTA_FRAGMENT_LIST]).setLovedlistAdapter((List<AliyunMusicInfo>) msg.obj,mCurrentAliyunMusicInfo);
                     return;
                 }
 
@@ -217,14 +217,14 @@ public class SupperFragmentManager implements IXiaoZhiClick, MotaMusicFragment.I
     {
 
         //only commulicat . if a music,not open app
-        if (!mainServer.isTopApp() && type == Msg.TYPE_SEND)
-        {
-            Intent intent = new Intent(mContext, MotaMainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            mContext.startActivity(intent);
-
-        }
+//        if (!mainServer.isTopApp() && type == Msg.TYPE_SEND)
+//        {
+//            Intent intent = new Intent(mContext, MotaMainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+//            mContext.startActivity(intent);
+//
+//        }
         mesHelper.addMessage(msg, type);
         //if receive ,may stop rec.
         if (type == Msg.TYPE_RECEIVE)

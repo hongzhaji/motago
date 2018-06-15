@@ -49,6 +49,7 @@ public class MotaMainActivityFragment extends Fragment implements SupperFragment
            // recyclerView.invalidate();
             Log.i("tyty"," adapter invalueda");
             adapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(msgList.size()-1);
 
         }
     };
@@ -103,11 +104,11 @@ public class MotaMainActivityFragment extends Fragment implements SupperFragment
         Msg msg1 = new Msg(msg, type);
         Log.i("tyty","msg = "+msg+"  type = "+type);
         msgList.add(msg1);
-        if(msgList.size()>4)
-        {
-            msgList.remove(0);
-
-        }
+//        if(msgList.size()>4)
+//        {
+//            msgList.remove(0);
+//
+//        }
         mUiHandler.obtainMessage().sendToTarget();
 
     }

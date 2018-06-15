@@ -38,7 +38,7 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
     private SeekBar musicSeekBar;
     private Handler mhadler;
     private  static final int CYCLE_MODE= 0;
-    private  static final int RANDOM_MODE= 1;
+    //private  static final int RANDOM_MODE= 1;
     private  static final int SINGLE_MODE= 2;
     private int currentMode = 0;
 
@@ -201,10 +201,6 @@ public class MotaMusicFragment extends Fragment implements INavigationClick
             public void onClick(View v)
             {
                 if(currentMode == CYCLE_MODE)
-                {
-                    currentMode = RANDOM_MODE;
-                    v.setBackgroundResource(R.drawable.music_play_sel_random);
-                }else if(currentMode == RANDOM_MODE)
                 {
                     currentMode = SINGLE_MODE;
                     v.setBackgroundResource(R.drawable.music_play_sel_single);

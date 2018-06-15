@@ -87,15 +87,19 @@ public class PlayListAdapter extends PagerAdapter
         playListAdapter.setHelp(help);
     }
 
-    public void  setPlayListAdapter(List<AliyunMusicInfo> views)
+    public void  setPlayListAdapter(List<AliyunMusicInfo> views,int position)
     {
         playListAdapter.setMyMusicInfos(views);
+        mViews.get(0).smoothScrollToPosition(position);
+        Log.i("tyty","set positon" +position);
 
     }
 
-    public void  setLovedListAdapter(List<AliyunMusicInfo> views)
+    public void  setLovedListAdapter(List<AliyunMusicInfo> views,int position)
     {
         lovedListAdapter.setMyMusicInfos(views);
+        mViews.get(1).smoothScrollToPosition(position);
+        Log.i("tyty","set positon" +position);
         Log.i("tyty","setLovedListAdapter");
 
     }
